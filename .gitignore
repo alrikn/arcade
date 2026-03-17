@@ -1,0 +1,8 @@
+*.out
+*.o
+*.so
+*.log
+*.tmp
+*.a
+*test*
+core
