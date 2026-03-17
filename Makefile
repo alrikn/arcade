@@ -9,9 +9,9 @@
 NAME = core
 
 SRC = main.cpp
-OBJ = $(SRC:.c=.o)
+OBJ = $(SRC:.cpp=.o)
 
-CC = clang
+CC = clang++
 CFLAGS = -Wall -Wextra -g
 
 all: $(NAME)
@@ -19,7 +19,7 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	$(CC) $(OBJ) -o $(NAME)
 
-%.o: %.c
+%.o: %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
