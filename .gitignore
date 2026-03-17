@@ -1,0 +1,40 @@
+# Build artifacts
+build/
+build-*/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+compile_commands.json
+Makefile
+*.o
+*.obj
+*.lo
+*.la
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+
+# generated files
+*.d
+*.gcno
+*.gcda
+*.gcov
+
+# debug / profiling
+*.prof
+*.gprof
+core
+vgcore.*
+
+# ide / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# others
+doc/
