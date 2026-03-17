@@ -3,7 +3,6 @@
 ## shared library compiler
 ## File description:
 ## Makefile
-## we only compile the main here, the shared library is compiled separately and loaded at runtime using dlopen and dlsym
 ##
 
 NAME = core
@@ -11,10 +10,21 @@ NAME = core
 SRC = main.cpp
 OBJ = $(SRC:.cpp=.o)
 
-CC = clang++
-CFLAGS = -Wall -Wextra -g
+GRAPHICAL_SRC = \
+	src/graphical_libraries/LibFoo/LibFoo.cpp \
+	src/graphical_libraries/Ncurses/Ncurses.cpp
 
-all: $(NAME)
+SHARED_FLAGS = -shared -fPIC
+
+GRAPHICAL_LIBS = $(GRAPHICAL_SRC:.cpp=.so)
+
+#where we put to .so objects
+LIB_DIR = lib/graphical_lib
+
+CC = clang++
+CFLAGS = -Wall -Wextra -g -Iinclude
+
+all: $(NAME) libs
 
 $(NAME): $(OBJ)
 	$(CC) $(OBJ) -o $(NAME)
@@ -22,11 +32,18 @@ $(NAME): $(OBJ)
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
+%.so: %.cpp
+	$(CC) $(CFLAGS) $(SHARED_FLAGS) -Iinclude -o $@ $<
+
+libs: $(GRAPHICAL_LIBS)
+
+
 clean:
 	rm -f $(OBJ)
 
 fclean: clean
 	rm -f $(NAME)
+	rm -f $(GRAPHICAL_LIBS)
 
 re: fclean all
 
@@ -35,4 +52,4 @@ re: fclean all
 compile_commands.json:
 	@bear -- make
 
-.PHONY: all clean fclean re compile_main
+.PHONY: all clean fclean re compile_main libs

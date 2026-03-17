@@ -20,9 +20,17 @@ class LibFoo : public IDisplayModule
         LibFoo() = default;
         ~LibFoo() = default;
 
-        void init() override;
-        void stop() override;
+        void init(void) override;
+        void stop(void) override;
         const std::string &getName() const override;
+
+        void draw() override;
+        void clear() override;
+        void pollEvents() override;
+        std::vector<EventType> getEvents() override;
+
+        void drawText(const std::string& text, int x, int y) override;
+        void drawTile(ShapeType shape, int color, int x, int y) override;
 
 };
 
