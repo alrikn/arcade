@@ -22,7 +22,7 @@ int main(void)
         }
 
         // call the myEntryPoint function
-        int (*myEntryPoint)(void) = dlsym(handle, "myEntryPoint");
+        int (*myEntryPoint)(void) = (int (*)(void))dlsym(handle, "myEntryPoint");
         if (!myEntryPoint) {
             fprintf(stderr, "Error finding symbol: %s\n", dlerror());
             dlclose(handle);

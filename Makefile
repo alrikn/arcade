@@ -3,21 +3,21 @@
 ## shared library compiler
 ## File description:
 ## Makefile
-##we need to compile multiple .so files, wit different source files
+## we only compile the main here, the shared library is compiled separately and loaded at runtime using dlopen and dlsym
 ##
 
 NAME = core
 
-SRC = main.c
+SRC = main.cpp
 OBJ = $(SRC:.c=.o)
 
-CC = gcc
-CFLAGS = -std=gnu17 -Wall -Wextra -iquote . -g
+CC = clang
+CFLAGS = -Wall -Wextra -g
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	ar rcs $(NAME) $(OBJ)
+	$(CC) $(OBJ) -o $(NAME)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -30,9 +30,9 @@ fclean: clean
 
 re: fclean all
 
-compile: epiclang -std=gnu17 -Wall -Wextra -iquote . main.c -L. -lstring -g
+
 
 compile_commands.json:
 	@bear -- make
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re compile_main

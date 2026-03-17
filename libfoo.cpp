@@ -51,9 +51,11 @@ void fini(void)
     printf("[libfoo] foo closing...\n");
 }
 
-int myEntryPoint(void)
-{
-    printf("[libfoo] Entry point for foo!\n");
-    return 0;
+extern "C" {
+    int myEntryPoint(void)
+    {
+        printf("[libfoo] Entry point for foo!\n");
+        return 0;
+    }
 }
 
