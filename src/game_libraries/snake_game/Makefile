@@ -12,7 +12,7 @@ NAME = arcade_snake.so
 SRC = SnakeGame.cpp
 
 CXX = clang++
-CXXFLAGS = -Wall -Wextra -fPIC -I../../../include
+CXXFLAGS = -Wall -Wextra -g -fPIC -I../../../include
 LDFLAGS = -shared
 
 OUTPUT_DIR = ../../../lib/game_lib

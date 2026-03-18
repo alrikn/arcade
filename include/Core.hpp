@@ -29,6 +29,7 @@ class Core
         IGameModule* game_module;
         MenuGame _menu_game;
     public:
+        bool _running = true;
         Core();
         ~Core() = default;
 

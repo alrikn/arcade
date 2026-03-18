@@ -21,9 +21,10 @@ void Core::run()
     printf("graphicalName: %s\n", graphical_module->getName().c_str());
     printf("gameName: %s\n", game_module->getName().c_str());
 
+    //this is line 24, and every mem leak comes from here.
     game_module->load_display(graphical_module);
 
-    while (true) {
+    while (_running) {
         EventType event = graphical_module->pollEvents();
 
         if (event == QUIT || event == MENU)
@@ -43,10 +44,11 @@ void Core::menu_handle()
     _menu_game.load_display(graphical_module);
     while (_menu) {
         EventType menu_event = graphical_module->pollEvents();
-        //if (menu_event == QUIT) {
-        //    _menu = false;
-        //    break;
-        //}
+        if (menu_event == QUIT) {
+            _menu = false;
+            _running = false;
+            break;
+        }
         _menu_game.tick(menu_event);
         auto [gameLibPath, graphLibPath] = _menu_game.get_path_chosen();
         if (gameLibPath != "" && graphLibPath != "") {

@@ -12,7 +12,7 @@ NAME = libNcurses.so
 SRC = Ncurses.cpp
 
 CXX = clang++
-CXXFLAGS = -Wall -Wextra -fPIC -I../../../include
+CXXFLAGS = -Wall -Wextra -g -fPIC -I../../../include
 LDFLAGS = -shared -lncurses
 
 OUTPUT_DIR = ../../../lib/graphical_lib
