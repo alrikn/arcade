@@ -50,22 +50,37 @@ void Core::menu_handle()
         _menu_game.tick(menu_event);
         auto [gameLibPath, graphLibPath] = _menu_game.get_path_chosen();
         if (gameLibPath != "" && graphLibPath != "") {
-            // first unload current game + graphical game if there is one
-            game_module->exit(); //we call exit to let the game do any cleanup it needs to do before we unload the library
-            graphical_module->stop(); //we call stop to let the graphical module do any cleanup it needs to do before we unload the library
-            game_loader.reset(); //we unload the current game library
-            graphical_loader.reset(); //we unload the current graphical library
 
-            // then we load the new game + graphical game
-            graphical_loader.setHandle(graphLibPath);
-            graphical_module = graphical_loader.getInstance();
-
-            game_loader.setHandle(gameLibPath);
-            game_module = game_loader.getInstance();
-
-            game_module->load_display(graphical_module);
+            if (gameLibPath != _currentGameLib)
+                load_new_game(gameLibPath);
+            if (graphLibPath != _currentGraphicalLib)
+                load_new_graphical(graphLibPath);
 
             _menu = false; //we exit the menu and start the game
         }
     }
+}
+
+void Core::load_new_game(std::string game_path)
+{
+    game_module->exit();
+    game_loader.reset();
+
+    game_loader.setHandle(game_path);
+    game_module = game_loader.getInstance();
+    game_module->load_display(graphical_module);
+
+    _currentGameLib = game_path;
+}
+
+void Core::load_new_graphical(std::string graphical_path)
+{
+    graphical_module->stop();
+    graphical_loader.reset();
+
+    graphical_loader.setHandle(graphical_path);
+    graphical_module = graphical_loader.getInstance();
+    game_module->load_display(graphical_module);
+
+    _currentGraphicalLib = graphical_path;
 }
