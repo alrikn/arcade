@@ -72,6 +72,10 @@ void Ncurses::pollEvents()
             //we would need to use getmouse() to get the mouse event, but for now we'll just push back a generic mouse event
             _events.push_back(MOUSE_L); //we'll just assume it's a left click for now
             break;
+        case 'q': //we also need to take in esc
+        case 27: //esc key
+            _events.push_back(QUIT);
+            break;
         default:
             _events.push_back(OTHER);
             break;
@@ -115,6 +119,18 @@ int Ncurses::getHeight()
     return height;
 }
 
+void Ncurses::display_menu()
+{
+    clear();
+    drawText("Welcome to the Arcade!", 0, 0);
+    drawText("Press SPACE to start the game", 0, 1);
+    drawText("Press Q to quit", 0, 2);
+    drawText("TODO: IMPLEMENT MENU LOGIC", 0, 3);
+    drawText("display menu will probably need to return smth and/or take an input (of all the options)", 0, 4);
+    drawText("display menu should also probably be a loop", 0, 5);
+    draw();
+}
+
 
 //C interface (THIS is what dlopen/dlsym uses)
 extern "C" {
@@ -126,6 +142,7 @@ IDisplayModule* create()
 
 void destroy(IDisplayModule* instance)
 {
+    instance->stop(); //we call stop before deleting the instance to make sure we end ncurses mode properly
     delete instance;
 }
 

@@ -30,8 +30,8 @@ int main(void)
 
     game_module->load_display(graphical_module);
 
-    while (true) {
-        game_module->tick();
-    }
+    game_module->loop();
+
+    graphical_module->display_menu();
     return 0;
 }

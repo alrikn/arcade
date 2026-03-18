@@ -32,6 +32,10 @@ class LibFoo : public IDisplayModule
         void drawText(const std::string& text, int x, int y) override;
         void drawTile(ShapeType shape, int color, int x, int y) override;
 
+        int getWidth() override;
+        int getHeight() override;
+
+        void display_menu() override;
 };
 
 

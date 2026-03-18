@@ -46,20 +46,20 @@ void SnakeGame::load_display(IDisplayModule* display)
 void SnakeGame::tick()
 {
     _display->pollEvents(); //we poll for events every tick
-    std::vector<EventType> events = _display->getEvents();//user input
+    _events = _display->getEvents();//user input
 
     //now we check for if for directions.
     //very ugly, we'll cahnge later
-    if (std::find(events.begin(), events.end(), W_KEY) != events.end()) {
+    if (std::find(_events.begin(), _events.end(), W_KEY) != _events.end()) {
         player_y--;
     }
-    if (std::find(events.begin(), events.end(), A_KEY) != events.end()) {
+    if (std::find(_events.begin(), _events.end(), A_KEY) != _events.end()) {
         player_x--;
     }
-    if (std::find(events.begin(), events.end(), S_KEY) != events.end()) {
+    if (std::find(_events.begin(), _events.end(), S_KEY) != _events.end()) {
         player_y++;
     }
-    if (std::find(events.begin(), events.end(), D_KEY) != events.end()) {
+    if (std::find(_events.begin(), _events.end(), D_KEY) != _events.end()) {
         player_x++;
     }
 
@@ -77,7 +77,6 @@ void SnakeGame::tick()
             _display->drawTile(_gameMap[y][x], 0, x, y); //we'll just use color 0 for now, but in the future we will need to use different colors for different tiles, and we will need to update the colors based on the game logic
         }
     }
-    _display->drawText("Use WASD to move the square", 0, _height + 1); //we'll just draw some text below the game map for testing purposes, but in the future we will need to draw the score and other game information here as well
     _display->draw();
 }
 
@@ -85,6 +84,9 @@ void SnakeGame::loop()
 {
     while (true) {
         tick();
+        if (std::find(_events.begin(), _events.end(), QUIT) != _events.end()) {
+            break;
+        }
     }
 }
 

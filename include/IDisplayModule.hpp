@@ -56,5 +56,7 @@ class IDisplayModule {
         virtual int getWidth() = 0;
         virtual int getHeight() = 0;
 
+        virtual void display_menu() = 0; //this is where the display module will handle the menu logic, it will be called by the core when the user is in the menu, and it can use this function to draw the menu and handle menu events
+
 };
 #endif

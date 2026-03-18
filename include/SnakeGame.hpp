@@ -22,6 +22,7 @@ class SnakeGame : public IGameModule
 
         int player_x = 1;
         int player_y = 1;
+        std::vector<EventType> _events;
 
         // we need to make a game map for the snake game, we can use a 2D vector of ShapeType for this, and we can use the drawTile function to draw the map based on the shape type
         std::vector<std::vector<ShapeType>> _gameMap;

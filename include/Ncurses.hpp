@@ -41,6 +41,8 @@ class Ncurses: public IDisplayModule
 
         int getWidth() override;
         int getHeight() override;
+
+        void display_menu() override;
 };
 
 
