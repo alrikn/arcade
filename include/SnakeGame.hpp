@@ -10,9 +10,9 @@
 
 #include <iostream>
 #include "IDisplayModule.hpp"
-#include "IGameLibrary.hpp"
+#include "IGameModule.hpp"
 
-class SnakeGame : public IGameLibrary
+class SnakeGame : public IGameModule
 {
     private:
         const std::string _name = "SnakeGame";

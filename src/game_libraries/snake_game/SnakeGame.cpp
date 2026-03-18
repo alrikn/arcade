@@ -6,6 +6,7 @@
 */
 
 #include "SnakeGame.hpp"
+#include "IGameModule.hpp"
 #include <algorithm>
 
 //for now we'll assume that the width and height of the game is 10*10 but in the future display and width will need to be given by the display module, and the game will need to adapt to it, but for now we'll just hardcode it for testing purposes.
@@ -76,12 +77,12 @@ void SnakeGame::exit()
 //C interface (THIS is what dlopen/dlsym uses)
 extern "C" {
 
-IGameLibrary* create()
+IGameModule* create()
 {
     return new SnakeGame();
 }
 
-void destroy(IGameLibrary* instance)
+void destroy(IGameModule* instance)
 {
     delete instance;
 }

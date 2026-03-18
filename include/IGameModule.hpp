@@ -2,20 +2,20 @@
 ** EPITECH PROJECT, 2026
 ** bootstrap_arcade
 ** File description:
-** IGameLibrary
+** IGameModule
 */
 
-#ifndef INCLUDED_IGAMELIBRARY_HPP
-    #define INCLUDED_IGAMELIBRARY_HPP
+#ifndef INCLUDED_IGAMEMODULE_HPP
+    #define INCLUDED_IGAMEMODULE_HPP
 
 #include "IDisplayModule.hpp"
 #include <iostream>
 
-class IGameLibrary
+class IGameModule
 {
     protected:
     public:
-        virtual ~IGameLibrary() = default;
+        virtual ~IGameModule() = default;
         virtual const std::string &getName() const = 0;
 
         //a game needs to get events from the display.
