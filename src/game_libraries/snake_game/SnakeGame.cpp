@@ -43,23 +43,23 @@ void SnakeGame::load_display(IDisplayModule* display)
 }
 
 //for now we'll assume that the width and height of the game is 10*10 but in the future display and width will need to be given by the display module, and the game will need to adapt to it, but for now we'll just hardcode it for testing purposes.
-void SnakeGame::tick()
+void SnakeGame::tick(EventType input)
 {
-    _display->pollEvents(); //we poll for events every tick
-    _events = _display->getEvents();//user input
+    //_display->pollEvents(); //we poll for events every tick
+    //_events = _display->getEvents();//user input
 
     //now we check for if for directions.
     //very ugly, we'll cahnge later
-    if (std::find(_events.begin(), _events.end(), W_KEY) != _events.end()) {
+    if (input == W_KEY) {
         player_y--;
     }
-    if (std::find(_events.begin(), _events.end(), A_KEY) != _events.end()) {
+    if (input == A_KEY) {
         player_x--;
     }
-    if (std::find(_events.begin(), _events.end(), S_KEY) != _events.end()) {
+    if (input == S_KEY) {
         player_y++;
     }
-    if (std::find(_events.begin(), _events.end(), D_KEY) != _events.end()) {
+    if (input == D_KEY) {
         player_x++;
     }
 
@@ -80,15 +80,6 @@ void SnakeGame::tick()
     _display->draw();
 }
 
-void SnakeGame::loop()
-{
-    while (true) {
-        tick();
-        if (std::find(_events.begin(), _events.end(), QUIT) != _events.end()) {
-            break;
-        }
-    }
-}
 
 void SnakeGame::exit()
 {

@@ -34,15 +34,13 @@ class Ncurses: public IDisplayModule
 
         void draw() override;
         void clear() override;
-        void pollEvents() override;
-        std::vector<EventType> getEvents() override;
+        EventType pollEvents() override;
         void drawText(const std::string& text, int x, int y) override;
         void drawTile(ShapeType shape, int color, int x, int y) override;
 
         int getWidth() override;
         int getHeight() override;
 
-        void display_menu() override;
 };
 
 

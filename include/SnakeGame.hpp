@@ -32,8 +32,7 @@ class SnakeGame : public IGameModule
 
         const std::string &getName() const override;
         void load_display(IDisplayModule* display) override;
-        void tick() override;
-        void loop() override;
+        void tick(EventType input) override;
         void exit() override;
 
 };

@@ -13,6 +13,7 @@
 #include "DLLoader.hpp"
 #include "IGameModule.hpp"
 #include "LibFoo.hpp"
+#include "MenuGame.hpp"
 
 
 int main(void)
@@ -30,8 +31,21 @@ int main(void)
 
     game_module->load_display(graphical_module);
 
-    game_module->loop();
+    bool menu = false; //will need to be default true after
+    while (true) {
+        EventType event = graphical_module->pollEvents();
 
-    graphical_module->display_menu();
+        if (event == QUIT || event == MENU)
+            menu = true;
+        if (menu) {
+            printf("Currently in the menu\n"); //debugging purposes
+            //here we load a game that does the meny callings
+            //MenuGame menu_game;
+            continue;
+        }
+        game_module->tick(event); //we will need to pass the events that were polled from the display module here, but for now we'll just pass a dummy event for testing purposes
+    }
+
+    //graphical_module->display_menu();
     return 0;
 }

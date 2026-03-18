@@ -27,6 +27,7 @@ enum EventType {
     SPACE_KEY,
     MOUSE_L,
     MOUSE_R,
+    MENU, //so that the core can detect when we want to go to the menu
     QUIT,
 };
 
@@ -39,10 +40,9 @@ class IDisplayModule {
         virtual void draw() = 0; //draws the current state of the game
         virtual void clear() = 0; //clears the screen (for the next draw)
 
-        virtual void pollEvents() = 0; //polls for events (keyboard, mouse, etc.)
+        virtual EventType pollEvents() = 0; //polls for events (keyboard, mouse, etc.)
         //however, the pollEvents is not enough, we also need a way to get the events that were polled
         // we can do this by having a getEvents function that returns a vector of events that were polled.
-        virtual std::vector<EventType> getEvents() = 0; //returns the events that were polled
 
 
         //drawing functions (these are just examples, we can add more as needed)
@@ -55,8 +55,6 @@ class IDisplayModule {
         //get width and height of display
         virtual int getWidth() = 0;
         virtual int getHeight() = 0;
-
-        virtual void display_menu() = 0; //this is where the display module will handle the menu logic, it will be called by the core when the user is in the menu, and it can use this function to draw the menu and handle menu events
 
 };
 #endif

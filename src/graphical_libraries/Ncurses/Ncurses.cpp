@@ -6,6 +6,7 @@
 */
 
 #include "Ncurses.hpp"
+#include "IDisplayModule.hpp"
 #include <iostream>
 #include <ncurses.h>
 
@@ -43,7 +44,7 @@ void Ncurses::clear()
     ::clear();
 }
 
-void Ncurses::pollEvents()
+EventType Ncurses::pollEvents()
 {
 
     //we can use getch() to get input, and we can use a switch statement to convert it to our EventType enum
@@ -51,45 +52,30 @@ void Ncurses::pollEvents()
     switch (ch) {
         case 'w':
         case KEY_UP:
-            _events.push_back(W_KEY);
-            break;
+            return W_KEY;
         case 'a':
         case KEY_LEFT:
-            _events.push_back(A_KEY);
-            break;
+            return A_KEY;
         case 's':
         case KEY_DOWN:
-            _events.push_back(S_KEY);
-            break;
+            return S_KEY;
         case 'd':
         case KEY_RIGHT:
-            _events.push_back(D_KEY);
-            break;
+            return D_KEY;
         case ' ':
-            _events.push_back(SPACE_KEY);
-            break;
+            return SPACE_KEY;
         case KEY_MOUSE:
             //we would need to use getmouse() to get the mouse event, but for now we'll just push back a generic mouse event
-            _events.push_back(MOUSE_L); //we'll just assume it's a left click for now
-            break;
+            return MOUSE_L; //we'll just return MOUSE_L for now, but in the future we will need to differentiate between left and right mouse clicks, and we will need to get the position of the mouse click as well
         case 'q': //we also need to take in esc
         case 27: //esc key
-            _events.push_back(QUIT);
-            break;
+            return QUIT;
         default:
-            _events.push_back(OTHER);
-            break;
+            return OTHER;
     }
 }
 
 
-std::vector<EventType> Ncurses::getEvents()
-{
-    //we return the events that were polled, and then we clear the vector for the next poll
-    std::vector<EventType> events = _events;
-    _events.clear();
-    return events;
-}
 
 void Ncurses::drawText(const std::string& text, int x, int y)
 {
@@ -118,19 +104,18 @@ int Ncurses::getHeight()
     getmaxyx(stdscr, height, width);
     return height;
 }
-
-void Ncurses::display_menu()
-{
-    clear();
-    drawText("Welcome to the Arcade!", 0, 0);
-    drawText("Press SPACE to start the game", 0, 1);
-    drawText("Press Q to quit", 0, 2);
-    drawText("TODO: IMPLEMENT MENU LOGIC", 0, 3);
-    drawText("display menu will probably need to return smth and/or take an input (of all the options)", 0, 4);
-    drawText("display menu should also probably be a loop", 0, 5);
-    draw();
-}
-
+//
+//void Ncurses::display_menu()
+//{
+//    clear();
+//    drawText("Welcome to the Arcade!", 0, 0);
+//    drawText("Press SPACE to start the game", 0, 1);
+//    drawText("Press Q to quit", 0, 2);
+//    drawText("TODO: IMPLEMENT MENU LOGIC IN A GAME", 0, 3);
+//    drawText("display menu will probably need to return smth and/or take an input (of all the options)", 0, 4);
+//    draw();
+//}
+//
 
 //C interface (THIS is what dlopen/dlsym uses)
 extern "C" {
