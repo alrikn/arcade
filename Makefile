@@ -8,7 +8,8 @@
 NAME = core
 
 SRC = main.cpp \
-	src/game_libraries/menu_game/MenuGame.cpp
+	src/game_libraries/menu_game/MenuGame.cpp \
+	src/Core.cpp
 OBJ = $(SRC:.cpp=.o)
 
 GRAPHICAL_DIRS = \
