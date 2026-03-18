@@ -27,6 +27,7 @@ enum EventType {
     SPACE_KEY,
     MOUSE_L,
     MOUSE_R,
+    QUIT,
 };
 
 class IDisplayModule {

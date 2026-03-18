@@ -13,7 +13,7 @@ SRC = Ncurses.cpp
 
 CXX = clang++
 CXXFLAGS = -Wall -Wextra -fPIC -I../../../include
-LDFLAGS = -shared
+LDFLAGS = -shared -lncurses
 
 OUTPUT_DIR = ../../../lib/graphical_lib
 

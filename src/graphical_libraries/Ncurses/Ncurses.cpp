@@ -45,8 +45,6 @@ void Ncurses::clear()
 
 void Ncurses::pollEvents()
 {
-    //for now we just print a message, but this is where we would poll for events
-    std::cout << "[" << _name << "] pollEvents" << std::endl;
 
     //we can use getch() to get input, and we can use a switch statement to convert it to our EventType enum
     int ch = getch();
