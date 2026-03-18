@@ -14,6 +14,9 @@ GRAPHICAL_DIRS = \
 	src/graphical_libraries/LibFoo \
 	src/graphical_libraries/Ncurses
 
+GAME_DIRS = \
+	src/game_libraries/snake_game
+
 SHARED_FLAGS = -shared -fPIC
 
 
@@ -35,6 +38,9 @@ libs: | $(LIB_DIR)
 	@for dir in $(GRAPHICAL_DIRS); do \
 		$(MAKE) -C $$dir; \
 	done
+	@for dir in $(GAME_DIRS); do \
+		$(MAKE) -C $$dir; \
+	done
 
 $(LIB_DIR):
 	mkdir -p $(LIB_DIR)
@@ -44,10 +50,16 @@ clean:
 	@for dir in $(GRAPHICAL_DIRS); do \
 		$(MAKE) -C $$dir clean; \
 	done
+	@for dir in $(GAME_DIRS); do \
+		$(MAKE) -C $$dir clean; \
+	done
 
 fclean: clean
 	rm -f $(NAME)
 	@for dir in $(GRAPHICAL_DIRS); do \
+		$(MAKE) -C $$dir fclean; \
+	done
+	@for dir in $(GAME_DIRS); do \
 		$(MAKE) -C $$dir fclean; \
 	done
 
