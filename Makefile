@@ -7,7 +7,8 @@
 
 NAME = core
 
-SRC = main.cpp
+SRC = main.cpp \
+	src/game_libraries/menu_game/MenuGame.cpp
 OBJ = $(SRC:.cpp=.o)
 
 GRAPHICAL_DIRS = \
@@ -15,7 +16,7 @@ GRAPHICAL_DIRS = \
 	src/graphical_libraries/Ncurses
 
 GAME_DIRS = \
-	src/game_libraries/snake_game
+	src/game_libraries/snake_game \
 
 SHARED_FLAGS = -shared -fPIC
 

@@ -21,7 +21,7 @@ class DLLoader {
         T* _instance;
 
     public:
-        DLLoader(const std::string& path)
+        DLLoader(const std::string& path) : _handle(nullptr), _destroyFunc(nullptr), _instance(nullptr)
         {
             _handle = dlopen(path.c_str(), RTLD_LAZY);
             if (!_handle)
@@ -30,9 +30,36 @@ class DLLoader {
 
         ~DLLoader()
         {
-            _destroyFunc(_instance);
-            if (_handle)
+            if (_instance && _destroyFunc) {
+                _destroyFunc(_instance);
+                _instance = nullptr;
+            }
+            if (_handle) {
                 dlclose(_handle);
+                _handle = nullptr;
+            }
+        }
+
+        void reset()
+        {
+            if (_instance && _destroyFunc) {
+                _destroyFunc(_instance);
+                _instance = nullptr;
+            }
+            _instance = nullptr;
+            _destroyFunc = nullptr;
+            if (_handle) {
+                dlclose(_handle);
+                _handle = nullptr;
+            }
+        }
+
+        void setHandle(const std::string& path)
+        {
+            reset();
+            _handle = dlopen(path.c_str(), RTLD_LAZY);
+            if (!_handle)
+                throw std::runtime_error(dlerror());
         }
 
         T* getInstance()
