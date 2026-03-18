@@ -39,7 +39,8 @@ void Ncurses::draw()
 void Ncurses::clear()
 {
     //clear the screen for the next draw
-    clear();
+    //this is calling itself insteasd of the ncurses clear function, we need to call the ncurses clear function instead
+    ::clear();
 }
 
 void Ncurses::pollEvents()
