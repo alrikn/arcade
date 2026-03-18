@@ -52,6 +52,9 @@ class IDisplayModule {
         //we could have a simple sprite class that can be used by both libraries, and the drawSprite function can take care of the differences between the two libraries
         virtual void drawTile(ShapeType shape, int color, int x, int y) = 0; //draws a space at the given position (for clearing)
 
+        //get width and height of display
+        virtual int getWidth() = 0;
+        virtual int getHeight() = 0;
 
 };
 #endif

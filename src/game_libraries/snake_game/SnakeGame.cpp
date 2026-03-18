@@ -29,13 +29,17 @@ void SnakeGame::load_display(IDisplayModule* display)
     std::cout << "[" << _name << "] load_display called with display: " << display->getName() << std::endl;
     _display = display; //we store the display module so we can use it in the game logic
 
+
+    _display->init();
+
+    _height = _display->getHeight();
+    _width = _display->getWidth();
+
     //we will fill game map with empty tiles for now, but in the future we will need to add the snake and the food to the game map, and we will need to update the game map every tick based on the game logic
-    _gameMap = std::vector<std::vector<ShapeType>>(_height, std::vector<ShapeType>(_width, CIRCLE));
+    _gameMap = std::vector<std::vector<ShapeType>>(_height, std::vector<ShapeType>(_width, EMPTY));
 
     //now we load the player on 1,1 for testing purposes, but in the future we will need to generate the player position randomly, and we will need to update the player position every tick based on the game logic
     _gameMap[player_y][player_x] = SQUARE;
-
-    _display->init();
 }
 
 //for now we'll assume that the width and height of the game is 10*10 but in the future display and width will need to be given by the display module, and the game will need to adapt to it, but for now we'll just hardcode it for testing purposes.

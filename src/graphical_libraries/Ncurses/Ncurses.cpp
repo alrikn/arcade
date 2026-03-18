@@ -78,6 +78,7 @@ void Ncurses::pollEvents()
     }
 }
 
+
 std::vector<EventType> Ncurses::getEvents()
 {
     //we return the events that were polled, and then we clear the vector for the next poll
@@ -98,6 +99,20 @@ void Ncurses::drawTile(ShapeType shape, int color, int x, int y)
     char tileChar = shapeToChar.at(shape);
     //the color could be used to set the color pair in ncurses, but for now we'll ignore it
     mvaddch(y, x, tileChar);
+}
+
+int Ncurses::getWidth()
+{
+    int width, height;
+    getmaxyx(stdscr, height, width);
+    return width;
+}
+
+int Ncurses::getHeight()
+{
+    int width, height;
+    getmaxyx(stdscr, height, width);
+    return height;
 }
 
 
