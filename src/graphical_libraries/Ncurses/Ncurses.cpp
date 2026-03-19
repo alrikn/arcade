@@ -20,6 +20,40 @@ void Ncurses::init(void)
     keypad(stdscr, TRUE); //enable special keys (like arrow keys)
     curs_set(0); //hide the cursor
     nodelay(stdscr, TRUE); //make getch non-blocking
+
+    //init the color pairs
+
+    start_color();
+
+    init_pair(1, COLOR_RED, COLOR_BLACK);
+    init_pair(2, COLOR_GREEN, COLOR_BLACK);
+    init_pair(3, COLOR_BLUE, COLOR_BLACK);
+    init_pair(4, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(5, COLOR_MAGENTA, COLOR_BLACK);
+    init_pair(6, COLOR_CYAN, COLOR_BLACK);
+    init_pair(7, COLOR_WHITE, COLOR_BLACK);
+}
+
+int Ncurses::get_color_pair(Color color)
+{
+    switch (color) {
+        case RED:
+            return 1;
+        case GREEN:
+            return 2;
+        case BLUE:
+            return 3;
+        case YELLOW:
+            return 4;
+        case MAGENTA:
+            return 5;
+        case CYAN:
+            return 6;
+        case WHITE:
+            return 7;
+        default:
+            return 0; //default color pair (black on black)
+    }
 }
 
 
@@ -84,12 +118,18 @@ void Ncurses::drawText(const std::string& text, int x, int y)
     mvprintw(y, x, "%s", text.c_str());
 }
 
-void Ncurses::drawTile(ShapeType shape, int color, int x, int y)
+
+void Ncurses::drawTile(ShapeType shape, Color color, int x, int y)
 {
     //we can use the shapeToChar map to get the character to draw based on the shape
     char tileChar = shapeToChar.at(shape);
+
+    //now for the color
+
     //the color could be used to set the color pair in ncurses, but for now we'll ignore it
+    attron(COLOR_PAIR(get_color_pair(color)));
     mvaddch(y, x, tileChar);
+    attroff(COLOR_PAIR(get_color_pair(color)));
 }
 
 int Ncurses::getWidth()

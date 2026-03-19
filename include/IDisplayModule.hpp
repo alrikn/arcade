@@ -31,6 +31,17 @@ enum EventType {
     QUIT,
 };
 
+enum Color {
+    BLACK = 0, //black is a valid color, but we will use it to represent the absence of color, so we can use it to represent empty tiles in the game map
+    RED,
+    GREEN,
+    BLUE,
+    YELLOW,
+    MAGENTA,
+    CYAN,
+    WHITE,
+};
+
 class IDisplayModule {
     public:
         virtual ~IDisplayModule() = default;
@@ -50,7 +61,7 @@ class IDisplayModule {
 
         //we need to keep in mind that while sfml can take a sprite object, ncurses can only draw characters
         //we could have a simple sprite class that can be used by both libraries, and the drawSprite function can take care of the differences between the two libraries
-        virtual void drawTile(ShapeType shape, int color, int x, int y) = 0; //draws a space at the given position (for clearing)
+        virtual void drawTile(ShapeType shape, Color color, int x, int y) = 0; //draws a space at the given position (for clearing)
 
         //get width and height of display
         virtual int getWidth() = 0;

@@ -14,8 +14,6 @@
 SnakeGame::SnakeGame()
 {
     std::cout << "[" << _name << "] Constructor called" << std::endl;
-
-
 }
 
 const std::string &SnakeGame::getName() const
@@ -116,21 +114,16 @@ void SnakeGame::tick(EventType input)
     //_lastMoveTime = now; //we succesfully know we have not died
 
     //update map. //we could actually directly call drawtile func on this
+    _display->clear();
     for (int y = 0; y < _height; y++) {
         for (int x = 0; x < _width; x++) {
             _gameMap[y][x] = EMPTY;
             if (std::find(_snake.begin(), _snake.end(), std::make_pair(x, y)) != _snake.end()) {
-                _gameMap[y][x] = SQUARE; //we draw the snake on the map
+                _display->drawTile(SQUARE, GREEN, x, y); //we can directly draw the snake tile here since we know its position, and we can save some time by not having to loop through the entire map to draw it
             }
             if (x == _foodPos.first && y == _foodPos.second) {
-                _gameMap[y][x] = CIRCLE; //we draw the food on the map
+                _display->drawTile(CIRCLE, RED, x, y); //we can directly draw the food tile here since we know its position, and we can save some time by not having to loop through the entire map to draw it
             }
-        }
-    }
-
-    for (int y = 0; y < _height; y++) {
-        for (int x = 0; x < _width; x++) {
-            _display->drawTile(_gameMap[y][x], 0, x, y); //we'll just use color 0 for now, but in the future we will need to use different colors for different tiles, and we will need to update the colors based on the game logic
         }
     }
     _display->draw();
