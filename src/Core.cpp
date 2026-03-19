@@ -13,6 +13,14 @@ Core::Core()
     printf("do smth");
 }
 
+void Core::update_event()
+{
+    EventType event = graphical_module->pollEvents();
+
+    if (event != OTHER)
+        _lastEvent = event;
+}
+
 void Core::run()
 {
     graphical_module = graphical_loader.getInstance();
@@ -26,33 +34,31 @@ void Core::run()
     bool loaded_menu = false;
 
     while (_running) {
-        EventType event = graphical_module->pollEvents();
+        update_event();
 
-        if (event != OTHER)
-            _lastEvent = event;
-
-        if (_lastEvent == QUIT || _lastEvent == MENU)
+        if (_lastEvent == QUIT || _lastEvent == MENU) {
             _menu = true;
+            _lastEvent = OTHER; //we reset the last event to other so we don't immediately exit the menu again
+        }
         if (_menu && !loaded_menu) {
             _menu_game.load_display(graphical_module);
             loaded_menu = true;
         }
-        if (_menu) {
+        auto now = std::chrono::steady_clock::now();
+        double elapsed = std::chrono::duration<double, std::milli>(now - _lastMoveTime).count();
+        if (elapsed < _elapsed)
+            continue; //not enough time
+        if (_menu)
             menu_handle();
-        } else {
-            auto now = std::chrono::steady_clock::now();
-            double elapsed = std::chrono::duration<double, std::milli>(now - _lastMoveTime).count();
-            if (elapsed < _elapsed)
-                continue; //not enough time
+        else
             game_module->tick(_lastEvent);
-            graphical_module->draw();
-            _lastMoveTime = std::chrono::steady_clock::now();
-        }
+        _lastMoveTime = std::chrono::steady_clock::now();
     }
 }
 
 void Core::menu_handle()
 {
+    update_event();
     if (_lastEvent == QUIT) {
         _menu = false;
         _running = false;

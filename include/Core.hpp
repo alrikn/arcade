@@ -33,7 +33,7 @@ class Core
         unsigned long _elapsed = 1; // time in millisecond between ticks.
 
         std::chrono::steady_clock::time_point _lastMoveTime;
-        EventType _lastEvent; //last event that isn't other
+        EventType _lastEvent = OTHER; //last event that isn't other
     public:
         bool _running = true;
         Core();
@@ -46,6 +46,8 @@ class Core
         void load_new_game(std::string game_path);
 
         void load_new_graphical(std::string graphical_path);
+
+        void update_event();
 
 };
 
