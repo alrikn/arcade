@@ -13,7 +13,6 @@ SRC = main.cpp \
 OBJ = $(SRC:.cpp=.o)
 
 GRAPHICAL_DIRS = \
-	src/graphical_libraries/LibFoo \
 	src/graphical_libraries/Ncurses
 
 GAME_DIRS = \

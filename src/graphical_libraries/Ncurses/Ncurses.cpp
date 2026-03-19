@@ -69,14 +69,31 @@ const std::string &Ncurses::getName() const
 
 void Ncurses::draw()
 {
-    refresh(); //refresh the screen to show the changes
+    const int termW = getNcurseWidth();
+    const int termH = getNcurseHeight();
+
+    if (termW < static_cast<int>(_width) + 2 || termH < static_cast<int>(_height) + 2) {
+        erase();
+        const std::string msg1 = "Please resize your terminal to at least " +
+            std::to_string(_width + 2) + "x" + std::to_string(_height + 2);
+        const std::string msg2 = "Current size is " + std::to_string(termW) + "x" + std::to_string(termH);
+
+        mvprintw(termH / 2, std::max(0, (termW - static_cast<int>(msg1.size())) / 2), "%s", msg1.c_str());
+        mvprintw(termH / 2 + 1, std::max(0, (termW - static_cast<int>(msg2.size())) / 2), "%s", msg2.c_str());
+        refresh();
+        return;
+    }
+
+    updateLayout();
+    drawBorder();
+    refresh();
 }
 
 void Ncurses::clear()
 {
     //clear the screen for the next draw
     //this is calling itself insteasd of the ncurses clear function, we need to call the ncurses clear function instead
-    ::clear();
+    ::erase();
 }
 
 EventType Ncurses::pollEvents()
@@ -115,7 +132,7 @@ EventType Ncurses::pollEvents()
 void Ncurses::drawText(const std::string& text, int x, int y)
 {
     //move the cursor to the given position and print the text
-    mvprintw(y, x, "%s", text.c_str());
+    mvprintw(y + _originY, x + _originX, "%s", text.c_str());
 }
 
 
@@ -128,22 +145,49 @@ void Ncurses::drawTile(ShapeType shape, Color color, int x, int y)
 
     //the color could be used to set the color pair in ncurses, but for now we'll ignore it
     attron(COLOR_PAIR(get_color_pair(color)));
-    mvaddch(y, x, tileChar);
+    mvaddch(y + _originY, x + _originX, tileChar);
     attroff(COLOR_PAIR(get_color_pair(color)));
 }
 
-int Ncurses::getWidth()
+int Ncurses::getNcurseHeight()
 {
-    int width, height;
+    unsigned int width, height;
+    getmaxyx(stdscr, height, width);
+    return height;
+}
+
+int Ncurses::getNcurseWidth()
+{
+    unsigned int width, height;
     getmaxyx(stdscr, height, width);
     return width;
 }
 
-int Ncurses::getHeight()
+void Ncurses::updateLayout()
 {
-    int width, height;
-    getmaxyx(stdscr, height, width);
-    return height;
+    _originX = (getNcurseWidth() - static_cast<int>(_width)) / 2;
+    _originY = (getNcurseHeight() - static_cast<int>(_height)) / 2;
+}
+
+void Ncurses::drawBorder()
+{
+    const int x = _originX - 1;
+    const int y = _originY - 1;
+
+    attron(COLOR_PAIR(get_color_pair(WHITE)));
+
+    mvaddch(y, x, ACS_ULCORNER);
+    mvhline(y, x + 1, ACS_HLINE, _width);
+    mvaddch(y, x + _width + 1, ACS_URCORNER);
+
+    mvvline(y + 1, x, ACS_VLINE, _height);
+    mvvline(y + 1, x + _width + 1, ACS_VLINE, _height);
+
+    mvaddch(y + _height + 1, x, ACS_LLCORNER);
+    mvhline(y + _height + 1, x + 1, ACS_HLINE, _width);
+    mvaddch(y + _height + 1, x + _width + 1, ACS_LRCORNER);
+
+    attroff(COLOR_PAIR(get_color_pair(WHITE)));
 }
 
 //C interface (THIS is what dlopen/dlsym uses)

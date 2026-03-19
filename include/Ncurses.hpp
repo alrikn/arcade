@@ -8,6 +8,7 @@
 #ifndef INCLUDED_NCURSES_HPP
     #define INCLUDED_NCURSES_HPP
 
+#include "ADisplayModule.hpp"
 #include "IDisplayModule.hpp"
 #include <map>
 
@@ -17,11 +18,10 @@ const std::map<ShapeType, char> shapeToChar = {
     {EMPTY, ' '}
 };
 
-class Ncurses: public IDisplayModule
+class Ncurses: public ADisplayModule
 {
     private:
         const std::string _name = "Ncurses";
-        std::vector<EventType> _events; //we will store the events that were polled here, and getEvents will return this vector
 
     public:
         Ncurses() = default;
@@ -38,10 +38,17 @@ class Ncurses: public IDisplayModule
         void drawText(const std::string& text, int x, int y) override;
         void drawTile(ShapeType shape, Color color, int x, int y) override;
 
-        int getWidth() override;
-        int getHeight() override;
+        int getNcurseWidth();
+        int getNcurseHeight();
 
         int get_color_pair(Color color);
+
+
+        int _originX = 0;
+        int _originY = 0;
+
+        void updateLayout();
+        void drawBorder();
 
 };
 
