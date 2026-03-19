@@ -14,6 +14,7 @@
 #include "IGameModule.hpp"
 #include "MenuGame.hpp"
 #include <string>
+#include <chrono>
 class Core
 {
     private:
@@ -28,6 +29,11 @@ class Core
         IDisplayModule* graphical_module;
         IGameModule* game_module;
         MenuGame _menu_game;
+
+        unsigned long _elapsed = 1; // time in millisecond between ticks.
+
+        std::chrono::steady_clock::time_point _lastMoveTime;
+        EventType _lastEvent; //last event that isn't other
     public:
         bool _running = true;
         Core();

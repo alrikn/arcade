@@ -8,11 +8,12 @@
 #ifndef INCLUDED_MENUGAME_HPP
     #define INCLUDED_MENUGAME_HPP
 
+#include "AGameModule.hpp"
 #include "IGameModule.hpp"
 #include <iostream>
 #include <vector>
 
-class MenuGame : public IGameModule
+class MenuGame : public AGameModule
 {
     private:
         const std::string _name = "MenuGame";

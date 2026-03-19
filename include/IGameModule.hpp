@@ -25,6 +25,9 @@ class IGameModule
         virtual void tick(EventType input) = 0; //this is where the game logic goes, it will be called every frame by the main loop
         //loop is actually handled by the core
         virtual void exit() = 0; //when the core needs the game to exit, it will call this function, and the game can do any cleanup it needs to do here before the core unloads the library
+
+        virtual unsigned long get_elapsed() = 0; //get how much time is supposed to happen between ticks.
+        virtual void set_elapsed(unsigned long elapsed) = 0; //set how much time is supposed to happen between ticks.
 };
 
 #endif

@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <chrono>
+#include "AGameModule.hpp"
 #include "IDisplayModule.hpp"
 #include "IGameModule.hpp"
 #include <deque>
@@ -22,7 +23,7 @@ enum Direction {
     RIGHT
 };
 
-class SnakeGame : public IGameModule
+class SnakeGame : public AGameModule
 {
     private:
         const std::string _name = "SnakeGame";

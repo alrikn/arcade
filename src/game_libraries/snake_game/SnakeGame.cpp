@@ -63,13 +63,13 @@ void SnakeGame::tick(EventType input)
     if (input == D_KEY && _currentDir != LEFT)
         _nextDir = RIGHT;
 
-    auto now = std::chrono::steady_clock::now();
-    double elapsed = std::chrono::duration<double>(now - _lastMoveTime).count();
+    //auto now = std::chrono::steady_clock::now();
+    //double elapsed = std::chrono::duration<double>(now - _lastMoveTime).count();
 
-    if (elapsed < _moveInterval || _gameover) {
-        //call smth to check high score
-        return;
-    }
+    //if (elapsed < _moveInterval || _gameover) {
+    //    //call smth to check high score
+    //    return;
+    //}
     _currentDir = _nextDir;
 
     auto [head_x, head_y] = _snake.front(); //we get the head of the snake, which is the front of the deque, and we use it to check for collisions with the food and with the snake itself, and we use it to update the game map based on the snake's movement
@@ -113,7 +113,7 @@ void SnakeGame::tick(EventType input)
         }
     }
 
-    _lastMoveTime = now; //we succesfully know we have not died
+    //_lastMoveTime = now; //we succesfully know we have not died
 
     //update map. //we could actually directly call drawtile func on this
     for (int y = 0; y < _height; y++) {
