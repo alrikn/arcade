@@ -9,8 +9,18 @@
     #define INCLUDED_SNAKEGAME_HPP
 
 #include <iostream>
+#include <chrono>
 #include "IDisplayModule.hpp"
 #include "IGameModule.hpp"
+#include <deque>
+#include <vector>
+
+enum Direction {
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
+};
 
 class SnakeGame : public IGameModule
 {
@@ -22,10 +32,24 @@ class SnakeGame : public IGameModule
 
         int player_x = 1;
         int player_y = 1;
-        std::vector<EventType> _events;
+
+        Direction _currentDir = RIGHT;
+        Direction _nextDir = RIGHT;
+
+        //deque comes from the library <
+        std::deque<std::pair<int, int>> _snake; //front = head
+        std::pair<int, int> _foodPos;
+        bool _gameOver = false;
+        int _score = 0;
+    
+        // Timing
+        std::chrono::steady_clock::time_point _lastMoveTime;
+        const double _moveInterval = 0.2;      // seconds per move
 
         // we need to make a game map for the snake game, we can use a 2D vector of ShapeType for this, and we can use the drawTile function to draw the map based on the shape type
         std::vector<std::vector<ShapeType>> _gameMap;
+
+        bool _gameover = false;
     public:
         SnakeGame();
         ~SnakeGame() = default;
@@ -34,6 +58,8 @@ class SnakeGame : public IGameModule
         void load_display(IDisplayModule* display) override;
         void tick(EventType input) override;
         void exit() override;
+
+        void generateFood(); //random food generation
 
 };
 

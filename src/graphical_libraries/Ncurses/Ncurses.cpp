@@ -19,6 +19,7 @@ void Ncurses::init(void)
     noecho(); //don't echo input
     keypad(stdscr, TRUE); //enable special keys (like arrow keys)
     curs_set(0); //hide the cursor
+    nodelay(stdscr, TRUE); //make getch non-blocking
 }
 
 
@@ -104,18 +105,6 @@ int Ncurses::getHeight()
     getmaxyx(stdscr, height, width);
     return height;
 }
-//
-//void Ncurses::display_menu()
-//{
-//    clear();
-//    drawText("Welcome to the Arcade!", 0, 0);
-//    drawText("Press SPACE to start the game", 0, 1);
-//    drawText("Press Q to quit", 0, 2);
-//    drawText("TODO: IMPLEMENT MENU LOGIC IN A GAME", 0, 3);
-//    drawText("display menu will probably need to return smth and/or take an input (of all the options)", 0, 4);
-//    draw();
-//}
-//
 
 //C interface (THIS is what dlopen/dlsym uses)
 extern "C" {

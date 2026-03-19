@@ -11,7 +11,6 @@
 #include <algorithm>
 #include <vector>
 
-//for now we'll assume that the width and height of the game is 10*10 but in the future display and width will need to be given by the display module, and the game will need to adapt to it, but for now we'll just hardcode it for testing purposes.
 SnakeGame::SnakeGame()
 {
     std::cout << "[" << _name << "] Constructor called" << std::endl;
@@ -38,6 +37,12 @@ void SnakeGame::load_display(IDisplayModule* display)
     //we will fill game map with empty tiles for now, but in the future we will need to add the snake and the food to the game map, and we will need to update the game map every tick based on the game logic
     _gameMap = std::vector<std::vector<ShapeType>>(_height, std::vector<ShapeType>(_width, EMPTY));
 
+    int start_x = _width / 2;
+    int start_y = _height / 2;
+
+    _snake.clear();
+    _snake.push_back({start_x, start_y}); //we start the snake in the middle
+
     //now we load the player on 1,1 for testing purposes, but in the future we will need to generate the player position randomly, and we will need to update the player position every tick based on the game logic
     _gameMap[player_y][player_x] = SQUARE;
 }
@@ -48,30 +53,81 @@ void SnakeGame::tick(EventType input)
     //_display->pollEvents(); //we poll for events every tick
     //_events = _display->getEvents();//user input
 
-    //now we check for if for directions.
-    //very ugly, we'll cahnge later
-    if (input == W_KEY) {
-        player_y--;
+
+    if (input == W_KEY && _currentDir != DOWN)
+        _nextDir = UP;
+    if (input == A_KEY && _currentDir != RIGHT)
+        _nextDir = LEFT;
+    if (input == S_KEY && _currentDir != UP)
+        _nextDir = DOWN;
+    if (input == D_KEY && _currentDir != LEFT)
+        _nextDir = RIGHT;
+
+    auto now = std::chrono::steady_clock::now();
+    double elapsed = std::chrono::duration<double>(now - _lastMoveTime).count();
+
+    if (elapsed < _moveInterval || _gameover) {
+        //call smth to check high score
+        return;
     }
-    if (input == A_KEY) {
-        player_x--;
-    }
-    if (input == S_KEY) {
-        player_y++;
-    }
-    if (input == D_KEY) {
-        player_x++;
+    _currentDir = _nextDir;
+
+    auto [head_x, head_y] = _snake.front(); //we get the head of the snake, which is the front of the deque, and we use it to check for collisions with the food and with the snake itself, and we use it to update the game map based on the snake's movement
+
+    switch (_currentDir) { //update head position based on curr pos
+        case UP:
+            head_y--;
+            break;
+        case DOWN:
+            head_y++;
+            break;
+        case LEFT:
+            head_x--;
+            break;
+        case RIGHT:
+            head_x++;
+            break;
     }
 
-    //we check if player is out of bounds, and if it is we set it back to the edge of the screen, but in the future we will need to handle this differently, maybe by ending the game or by wrapping around the screen, but for now we'll just set it back to the edge of the screen for testing purposes.
-    if (player_x < 0) player_x = 0;
-    if (player_x >= _width) player_x = _width - 1;
-    if (player_y < 0) player_y = 0;
-    if (player_y >= _height) player_y = _height - 1;
+    if (head_x < 0 || head_x >= _width || head_y < 0 || head_y >= _height) {
+        _gameover = true;
+        return;
+    } //todo also check for collision with snake body
 
-    _gameMap[player_y][player_x] = SQUARE;
+    bool ateFood = (head_x == _foodPos.first && head_y == _foodPos.second);
 
-    //for some reason, d_key makes me go down, a makes me go up, w makes me go left, and s makes me go right.
+    _snake.push_front({head_x, head_y}); //we add the new head pos
+
+    if (ateFood) {
+        _score++;
+        generateFood(); //we generate new food if we ate the food
+    } else
+        _snake.pop_back(); //we remove tail snake if we not eat food
+
+    //now we check coll with itself
+    auto head = _snake.front();
+    for (size_t i = 1; i < _snake.size(); i++) {
+        if (_snake[i] == head) {
+            _gameover = true;
+            return;
+        }
+    }
+
+    _lastMoveTime = now; //we succesfully know we have not died
+
+    //update map. //we could actually directly call drawtile func on this
+    for (int y = 0; y < _height; y++) {
+        for (int x = 0; x < _width; x++) {
+            _gameMap[y][x] = EMPTY;
+            if (std::find(_snake.begin(), _snake.end(), std::make_pair(x, y)) != _snake.end()) {
+                _gameMap[y][x] = SQUARE; //we draw the snake on the map
+            }
+            if (x == _foodPos.first && y == _foodPos.second) {
+                _gameMap[y][x] = CIRCLE; //we draw the food on the map
+            }
+        }
+    }
+
     for (int y = 0; y < _height; y++) {
         for (int x = 0; x < _width; x++) {
             _display->drawTile(_gameMap[y][x], 0, x, y); //we'll just use color 0 for now, but in the future we will need to use different colors for different tiles, and we will need to update the colors based on the game logic
@@ -80,6 +136,16 @@ void SnakeGame::tick(EventType input)
     _display->draw();
 }
 
+void SnakeGame::generateFood()
+{
+    int food_x, food_y;
+    do {
+        food_x = rand() % _width;
+        food_y = rand() % _height;
+    } while (std::find(_snake.begin(), _snake.end(), std::make_pair(food_x, food_y)) != _snake.end()); //we need to make sure that the food is not generated on the snake
+
+    _foodPos = {food_x, food_y};
+}
 
 void SnakeGame::exit()
 {
