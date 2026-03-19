@@ -36,12 +36,13 @@ void Core::run()
     while (_running) {
         update_event();
 
-        if (_lastEvent == QUIT || _lastEvent == MENU) {
+        if ((_lastEvent == QUIT || _lastEvent == MENU) && !_menu) {
             _menu = true;
             _lastEvent = OTHER; //we reset the last event to other so we don't immediately exit the menu again
         }
         if (_menu && !loaded_menu) {
             _menu_game.load_display(graphical_module);
+            _elapsed = _menu_game.get_elapsed();
             loaded_menu = true;
         }
         auto now = std::chrono::steady_clock::now();

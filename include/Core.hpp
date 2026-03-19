@@ -30,7 +30,7 @@ class Core
         IGameModule* game_module;
         MenuGame _menu_game;
 
-        unsigned long _elapsed = 1; // time in millisecond between ticks.
+        unsigned long _elapsed = 16; // time in millisecond between ticks.
 
         std::chrono::steady_clock::time_point _lastMoveTime;
         EventType _lastEvent = OTHER; //last event that isn't other
