@@ -14,8 +14,8 @@
 class ADisplayModule : public IDisplayModule
 {
     protected:
-        const unsigned int _width = 60; //default width
-        const unsigned int _height = 40; //default height
+        const unsigned int _width = WIDTH; //default width
+        const unsigned int _height = HEIGHT; //default height
     public:
 
         int getWidth() override

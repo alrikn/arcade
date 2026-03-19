@@ -42,6 +42,9 @@ enum Color {
     WHITE,
 };
 
+const int HEIGHT = 40;
+const int WIDTH = 60;
+
 class IDisplayModule {
     public:
         virtual ~IDisplayModule() = default;

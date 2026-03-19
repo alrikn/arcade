@@ -8,6 +8,7 @@
 #ifndef INCLUDED_AGAMEMODULE_HPP
     #define INCLUDED_AGAMEMODULE_HPP
 
+#include "IDisplayModule.hpp"
 #include "IGameModule.hpp"
 
 class AGameModule : public IGameModule
@@ -19,6 +20,7 @@ class AGameModule : public IGameModule
         unsigned int _score = 0;
         unsigned int _highscore = 0;
         bool _gameover = false;
+        IDisplayModule* _display = nullptr;
 
     public:
 
@@ -48,6 +50,13 @@ class AGameModule : public IGameModule
         bool get_gameover() override
         {
             return _gameover;
+        }
+
+        void load_display(IDisplayModule* display) override
+        {
+            _display = display;
+            _display->init();
+
         }
 
 };

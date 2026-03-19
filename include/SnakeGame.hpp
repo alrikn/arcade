@@ -27,12 +27,6 @@ class SnakeGame : public AGameModule
 {
     private:
         const std::string _name = "SnakeGame";
-        IDisplayModule* _display; //we will store the display module here so we can use it in the game logic
-        int _width = 10; //will be dynamic in the future
-        int _height = 10; //will be dynamic in the future
-
-        int player_x = 1;
-        int player_y = 1;
 
         Direction _currentDir = RIGHT;
         Direction _nextDir = RIGHT;
@@ -49,7 +43,7 @@ class SnakeGame : public AGameModule
         ~SnakeGame() = default;
 
         const std::string &getName() const override;
-        void load_display(IDisplayModule* display) override;
+        //void load_display(IDisplayModule* display) override;
         void tick(EventType input) override;
         void exit() override;
 

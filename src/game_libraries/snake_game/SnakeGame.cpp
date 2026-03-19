@@ -16,6 +16,13 @@ SnakeGame::SnakeGame()
     std::cout << "[" << _name << "] Constructor called" << std::endl;
 
     this->set_elapsed(40); //otherwise snake goes way too fast
+
+    int start_x = WIDTH / 2;
+    int start_y = HEIGHT / 2;
+
+    _snake.push_back({start_x, start_y});
+    generateFood();
+
 }
 
 const std::string &SnakeGame::getName() const
@@ -23,29 +30,6 @@ const std::string &SnakeGame::getName() const
     return _name;
 }
 
-void SnakeGame::load_display(IDisplayModule* display)
-{
-    std::cout << "[" << _name << "] load_display called with display: " << display->getName() << std::endl;
-    _display = display; //we store the display module so we can use it in the game logic
-
-
-    _display->init();
-
-    _height = _display->getHeight();
-    _width = _display->getWidth();
-
-    //we will fill game map with empty tiles for now, but in the future we will need to add the snake and the food to the game map, and we will need to update the game map every tick based on the game logic
-    _gameMap = std::vector<std::vector<ShapeType>>(_height, std::vector<ShapeType>(_width, EMPTY));
-
-    int start_x = _width / 2;
-    int start_y = _height / 2;
-
-    _snake.clear();
-    _snake.push_back({start_x, start_y}); //we start the snake in the middle
-
-    //now we load the player on 1,1 for testing purposes, but in the future we will need to generate the player position randomly, and we will need to update the player position every tick based on the game logic
-    _gameMap[player_y][player_x] = SQUARE;
-}
 
 //for now we'll assume that the width and height of the game is 10*10 but in the future display and width will need to be given by the display module, and the game will need to adapt to it, but for now we'll just hardcode it for testing purposes.
 void SnakeGame::tick(EventType input)
@@ -83,7 +67,7 @@ void SnakeGame::tick(EventType input)
     }
 
     //check for coll with walls
-    if (head_x < 0 || head_x >= _width || head_y < 0 || head_y >= _height) {
+    if (head_x < 0 || head_x >= WIDTH || head_y < 0 || head_y >= HEIGHT) {
         _gameover = true;
         return;
     }
@@ -112,15 +96,14 @@ void SnakeGame::tick(EventType input)
         _display->drawTile(SQUARE, GREEN, seg.first, seg.second);
     }
     _display->drawTile(CIRCLE, RED, _foodPos.first, _foodPos.second);
-    _display->draw();
 }
 
 void SnakeGame::generateFood()
 {
     int food_x, food_y;
     do {
-        food_x = rand() % _width;
-        food_y = rand() % _height;
+        food_x = rand() % WIDTH;
+        food_y = rand() % HEIGHT;
     } while (std::find(_snake.begin(), _snake.end(), std::make_pair(food_x, food_y)) != _snake.end()); //we need to make sure that the food is not generated on the snake
 
     _foodPos = {food_x, food_y};
