@@ -73,6 +73,7 @@ void Core::menu_handle()
         if (graphLibPath != _currentGraphicalLib)
             load_new_graphical(graphLibPath);
         _menu = false; //we exit the menu and start the game
+        _elapsed = game_module->get_elapsed(); //we update the elapsed time based on the new game's settings
     }
 
 }
@@ -87,7 +88,6 @@ void Core::load_new_game(std::string game_path)
     game_module->load_display(graphical_module);
 
     _currentGameLib = game_path;
-    _elapsed = game_module->get_elapsed();
 }
 
 void Core::load_new_graphical(std::string graphical_path)
@@ -100,5 +100,4 @@ void Core::load_new_graphical(std::string graphical_path)
     game_module->load_display(graphical_module);
 
     _currentGraphicalLib = graphical_path;
-    _elapsed = game_module->get_elapsed();
 }

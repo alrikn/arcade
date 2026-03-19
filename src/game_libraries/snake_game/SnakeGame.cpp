@@ -14,6 +14,8 @@
 SnakeGame::SnakeGame()
 {
     std::cout << "[" << _name << "] Constructor called" << std::endl;
+
+    this->set_elapsed(40); //otherwise snake goes way too fast
 }
 
 const std::string &SnakeGame::getName() const
@@ -61,13 +63,6 @@ void SnakeGame::tick(EventType input)
     if (input == D_KEY && _currentDir != LEFT)
         _nextDir = RIGHT;
 
-    //auto now = std::chrono::steady_clock::now();
-    //double elapsed = std::chrono::duration<double>(now - _lastMoveTime).count();
-
-    //if (elapsed < _moveInterval || _gameover) {
-    //    //call smth to check high score
-    //    return;
-    //}
     _currentDir = _nextDir;
 
     auto [head_x, head_y] = _snake.front(); //we get the head of the snake, which is the front of the deque, and we use it to check for collisions with the food and with the snake itself, and we use it to update the game map based on the snake's movement
@@ -87,10 +82,19 @@ void SnakeGame::tick(EventType input)
             break;
     }
 
+    //check for coll with walls
     if (head_x < 0 || head_x >= _width || head_y < 0 || head_y >= _height) {
         _gameover = true;
         return;
-    } //todo also check for collision with snake body
+    }
+    //now we check coll with itself
+    auto head = _snake.front();
+    for (size_t i = 1; i < _snake.size(); i++) {
+        if (_snake[i] == head) {
+            _gameover = true;
+            return;
+        }
+    }
 
     bool ateFood = (head_x == _foodPos.first && head_y == _foodPos.second);
 
@@ -102,30 +106,12 @@ void SnakeGame::tick(EventType input)
     } else
         _snake.pop_back(); //we remove tail snake if we not eat food
 
-    //now we check coll with itself
-    auto head = _snake.front();
-    for (size_t i = 1; i < _snake.size(); i++) {
-        if (_snake[i] == head) {
-            _gameover = true;
-            return;
-        }
-    }
-
-    //_lastMoveTime = now; //we succesfully know we have not died
-
     //update map. //we could actually directly call drawtile func on this
     _display->clear();
-    for (int y = 0; y < _height; y++) {
-        for (int x = 0; x < _width; x++) {
-            _gameMap[y][x] = EMPTY;
-            if (std::find(_snake.begin(), _snake.end(), std::make_pair(x, y)) != _snake.end()) {
-                _display->drawTile(SQUARE, GREEN, x, y); //we can directly draw the snake tile here since we know its position, and we can save some time by not having to loop through the entire map to draw it
-            }
-            if (x == _foodPos.first && y == _foodPos.second) {
-                _display->drawTile(CIRCLE, RED, x, y); //we can directly draw the food tile here since we know its position, and we can save some time by not having to loop through the entire map to draw it
-            }
-        }
+    for (const auto& seg : _snake) {
+        _display->drawTile(SQUARE, GREEN, seg.first, seg.second);
     }
+    _display->drawTile(CIRCLE, RED, _foodPos.first, _foodPos.second);
     _display->draw();
 }
 

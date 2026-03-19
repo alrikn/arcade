@@ -40,12 +40,7 @@ class SnakeGame : public AGameModule
         //deque comes from the library <
         std::deque<std::pair<int, int>> _snake; //front = head
         std::pair<int, int> _foodPos;
-        bool _gameOver = false;
         int _score = 0;
-    
-        // Timing
-        std::chrono::steady_clock::time_point _lastMoveTime;
-        const double _moveInterval = 0.2;      // seconds per move
 
         // we need to make a game map for the snake game, we can use a 2D vector of ShapeType for this, and we can use the drawTile function to draw the map based on the shape type
         std::vector<std::vector<ShapeType>> _gameMap;
