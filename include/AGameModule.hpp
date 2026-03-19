@@ -14,7 +14,8 @@ class AGameModule : public IGameModule
 {
     private:
     protected:
-        unsigned long _elapsed = 16;// time in millisecond between ticks.
+        //this equates t
+        unsigned long _elapsed = 25;// time in millisecond between ticks.
 
     public:
 

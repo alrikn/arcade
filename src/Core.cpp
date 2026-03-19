@@ -53,6 +53,7 @@ void Core::run()
             menu_handle();
         else
             game_module->tick(_lastEvent);
+        _lastEvent = OTHER; //we reset the last event to other so we don't immediately repeat the same event again
         _lastMoveTime = std::chrono::steady_clock::now();
     }
 }
