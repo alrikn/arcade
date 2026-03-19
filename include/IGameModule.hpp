@@ -28,6 +28,11 @@ class IGameModule
 
         virtual unsigned long get_elapsed() = 0; //get how much time is supposed to happen between ticks.
         virtual void set_elapsed(unsigned long elapsed) = 0; //set how much time is supposed to happen between ticks.
+
+        virtual unsigned int get_score() = 0; //get the current score of the game
+        virtual void set_score(unsigned int score) = 0; //set the current score of the game
+
+        virtual bool get_gameover() = 0; //get whether the game is over or not
 };
 
 #endif
