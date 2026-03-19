@@ -6,17 +6,22 @@ A modular arcade framework that lets you mix and match graphical backends and ga
 
 ## Table of Contents
 
-- [Prerequisites](#prerequisites)
-- [Building & Compiling](#building--compiling)
-- [Running the Project](#running-the-project)
-- [Architecture](#architecture)
-  - [Directory Layout](#directory-layout)
-  - [Component Overview](#component-overview)
-  - [Plugin Loading](#plugin-loading)
-  - [Interfaces](#interfaces)
-  - [Core Game Loop](#core-game-loop)
-- [Adding a New Graphical Library](#adding-a-new-graphical-library)
-- [Adding a New Game Library](#adding-a-new-game-library)
+- [Arcade](#arcade)
+  - [Table of Contents](#table-of-contents)
+  - [Prerequisites](#prerequisites)
+  - [Building \& Compiling](#building--compiling)
+  - [Running the Project](#running-the-project)
+  - [Architecture](#architecture)
+    - [Directory Layout](#directory-layout)
+    - [Component Overview](#component-overview)
+    - [Plugin Loading](#plugin-loading)
+    - [Interfaces](#interfaces)
+      - [`IDisplayModule` — graphical library contract](#idisplaymodule--graphical-library-contract)
+      - [`IGameModule` — game library contract](#igamemodule--game-library-contract)
+      - [Abstract base classes](#abstract-base-classes)
+    - [Core Game Loop](#core-game-loop)
+  - [Adding a New Graphical Library](#adding-a-new-graphical-library)
+  - [Adding a New Game Library](#adding-a-new-game-library)
 
 ---
 
@@ -137,7 +142,7 @@ arcade/
 
 ```
 ┌─────────────────────────────────────────────┐
-│                 Core Engine                  │
+│                Core Engine                  │
 │  - Owns DLLoader<IDisplayModule>            │
 │  - Owns DLLoader<IGameModule>               │
 │  - Drives the main game loop                │
@@ -312,33 +317,7 @@ Core::run()
    }
    ```
 
-4. **Write a `Makefile`** following the same pattern as `src/graphical_libraries/Ncurses/Makefile`:
-
-   ```makefile
-   NAME = libMyLib.so
-   SRC  = MyLib.cpp
-
-   CXX      = clang++
-   CXXFLAGS = -Wall -Wextra -g -fPIC -I../../../include
-   LDFLAGS  = -shared   # add -lYourLib if you have extra link dependencies
-
-   OUTPUT_DIR = ../../../lib/graphical_lib
-
-   all: $(OUTPUT_DIR)/$(NAME)
-
-   $(OUTPUT_DIR)/$(NAME): $(SRC) | $(OUTPUT_DIR)
-   	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
-
-   $(OUTPUT_DIR):
-   	mkdir -p $(OUTPUT_DIR)
-
-   clean:  ; rm -f $(OUTPUT_DIR)/$(NAME)
-   fclean: clean
-   re:     fclean all
-   .PHONY: all clean fclean re
-   ```
-
-5. **Register the directory** in the root `Makefile` so that `make all` / `make libs` picks it up:
+4. **Register the directory** in the root `Makefile` so that `make all` / `make libs` picks it up:
 
    ```makefile
    GRAPHICAL_DIRS = \
@@ -346,7 +325,7 @@ Core::run()
        src/graphical_libraries/MyLib   # ← add this line
    ```
 
-6. **Build and test:**
+5. **Build and test:**
 
    ```bash
    make
@@ -414,41 +393,17 @@ Core::run()
    - Set `_gameover = true` when the game should end; the core will return to the menu automatically.
    - The coordinate origin `(0, 0)` is the top-left corner of the game area. Valid range: `x ∈ [0, WIDTH)`, `y ∈ [0, HEIGHT)`.
 
-4. **Write a `Makefile`** following the same pattern as `src/game_libraries/snake_game/Makefile`:
 
-   ```makefile
-   NAME = arcade_my_game.so
-   SRC  = MyGame.cpp
-
-   CXX      = clang++
-   CXXFLAGS = -Wall -Wextra -g -fPIC -I../../../include
-   LDFLAGS  = -shared
-
-   OUTPUT_DIR = ../../../lib/game_lib
-
-   all: $(OUTPUT_DIR)/$(NAME)
-
-   $(OUTPUT_DIR)/$(NAME): $(SRC) | $(OUTPUT_DIR)
-   	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
-
-   $(OUTPUT_DIR):
-   	mkdir -p $(OUTPUT_DIR)
-
-   clean:  ; rm -f $(OUTPUT_DIR)/$(NAME)
-   fclean: clean
-   re:     fclean all
-   .PHONY: all clean fclean re
-   ```
-
-5. **Register the directory** in the root `Makefile`:
+4. **Register the directory** in the root `Makefile`:
 
    ```makefile
    GAME_DIRS = \
        src/game_libraries/snake_game \
        src/game_libraries/my_game    # ← add this line
    ```
+   For now every thing is done with makefiles, but we'll migrate to cmake.
 
-6. **Build and test:**
+5. **Build and test:**
 
    ```bash
    make
