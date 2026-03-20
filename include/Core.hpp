@@ -20,7 +20,7 @@ class Core
     private:
         const std::string _name = "Core";
         std::string _currentGameLib = "./lib/game_lib/arcade_snake.so";
-        std::string _currentGraphicalLib = "./lib/graphical_lib/libNcurses.so";
+        std::string _currentGraphicalLib = "./lib/graphical_lib/arcade_ncurses.so";
         bool _menu = true; //we start in the menu, so we set this to true
 
         DLLoader<IDisplayModule> graphical_loader = DLLoader<IDisplayModule>(_currentGraphicalLib);

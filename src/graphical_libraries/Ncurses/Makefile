@@ -7,7 +7,7 @@
 
 
 
-NAME = libNcurses.so
+NAME = arcade_ncurses.so
 
 SRC = Ncurses.cpp
 
