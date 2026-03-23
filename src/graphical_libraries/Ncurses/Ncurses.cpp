@@ -190,6 +190,20 @@ void Ncurses::drawBorder()
     attroff(COLOR_PAIR(get_color_pair(WHITE)));
 }
 
+char Ncurses::getInputChar()
+{
+    int ch = getch();
+    if (ch != ERR) { //if there is an input
+        if (ch >= 32 && ch <= 126) { //if it's a printable character
+            return static_cast<char>(ch);
+        }
+        if (ch == '\n' || ch == 27) { //if it's enter or esc, we can return it as well
+            return '\n'; //both do same thing
+        }
+    }
+    return '\0'; //no input
+}
+
 //C interface (THIS is what dlopen/dlsym uses)
 extern "C" {
 
