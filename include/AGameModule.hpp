@@ -42,6 +42,16 @@ class AGameModule : public IGameModule
             _score = score;
         }
 
+        unsigned int get_highscore() override
+        {
+            return _highscore;
+        }
+
+        void set_highscore(unsigned int highscore) override
+        {
+            _highscore = highscore;
+        }
+
         void set_elapsed(unsigned long elapsed) override
         {
             _elapsed = elapsed;
