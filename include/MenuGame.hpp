@@ -30,6 +30,9 @@ class MenuGame : public AGameModule
         int current_game_index = 0; //this will keep track of the currently selected game index in the _gameLibs vector
         int current_graphical_index = 0; //this will keep track of the currently selected graphical index in the _graphicalLibs vector
         int global_index = 0; //this will keep track of the currently selected index in the overall menu
+
+        std::string player_name = ""; //we'll use it at the start of the menu, then we'll pass it to core
+        bool name_entered = false; //this will be set to true when the user has entered their name, and it will be used to determine when to show the rest of the menu options
     public:
         MenuGame();
         ~MenuGame() = default;
@@ -39,6 +42,12 @@ class MenuGame : public AGameModule
         void load_display(IDisplayModule* display) override;
         void tick(EventType input) override;
         void exit() override;
+        bool is_name_entered() const { return name_entered; }
+        std::string get_player_name() const { return player_name; }
+
+        //is a loop of its own that handles name input
+        //gets called only once when the core boots up the menu, and it will keep looping until the user has entered their name, and then it will set name_entered to true and return the name, which will be stored in player_name
+        void handle_name_input(void);
 
 };
 

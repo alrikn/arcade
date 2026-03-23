@@ -56,7 +56,30 @@ void MenuGame::load_display(IDisplayModule* display)
     _height = _display->getHeight();
     _width = _display->getWidth();
 
+    handle_name_input();
+
     //we should also check all of the .so files in the lib folder to be able to display them
+}
+
+void MenuGame::handle_name_input(void)
+{
+    while (!name_entered) {
+        char ch = _display->getInputChar();
+        if (ch == '\n') { //if the user presses enter, we consider the name input to be complete
+            name_entered = true;
+            break;
+        }
+        //if its not \0 we append
+        if (ch != '\0') {
+            player_name += ch;
+        }
+
+        //render the name input screen
+        _display->clear();
+        _display->drawText("Please enter your name:", 0, 0);
+        _display->drawText(player_name + "_", 0, 1); //we add an underscore to indicate the cursor position
+        _display->draw();
+    }
 }
 
 void MenuGame::tick(EventType input)

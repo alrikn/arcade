@@ -49,6 +49,10 @@ class SnakeGame : public AGameModule
 
         void generateFood(); //random food generation
 
+        bool checkCollision(int x, int y); //check for collision with walls and snake body
+
+        void reset_game(EventType input); //display score and high score, until the user presses space to reset game
+
 };
 
 

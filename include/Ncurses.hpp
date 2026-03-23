@@ -51,6 +51,8 @@ class Ncurses: public ADisplayModule
         void updateLayout();
         void drawBorder();
 
+        char getInputChar() override; //to get text
+
 };
 
 
