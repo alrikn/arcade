@@ -5,7 +5,7 @@
 ## Makefile
 ##
 
-NAME = core
+NAME = arcade
 
 SRC = main.cpp \
 	src/game_libraries/menu_game/MenuGame.cpp \
@@ -41,6 +41,11 @@ libs: | $(LIB_DIR)
 		$(MAKE) -C $$dir; \
 	done
 	@for dir in $(GAME_DIRS); do \
+		$(MAKE) -C $$dir; \
+	done
+
+graphical:
+	@for dir in $(GRAPHICAL_DIRS); do \
 		$(MAKE) -C $$dir; \
 	done
 

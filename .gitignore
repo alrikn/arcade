@@ -5,7 +5,7 @@
 *.tmp
 *.a
 *test*
-core
+arcade
 
 # Build artifacts
 build/
