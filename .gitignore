@@ -14,7 +14,6 @@ cmake-build-*/
 CMakeFiles/
 CMakeCache.txt
 compile_commands.json
-Makefile
 *.o
 *.obj
 *.lo
