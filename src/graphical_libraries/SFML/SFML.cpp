@@ -78,7 +78,10 @@ EventType SFML_lib::pollEvents()
                 case sf::Keyboard::Space:
                     return SPACE_KEY;
                 case sf::Keyboard::Escape:
+                case sf::Keyboard::Q:
                     return QUIT;
+                case sf::Keyboard::M:
+                    return MENU;
                 default:
                     break;
             }
