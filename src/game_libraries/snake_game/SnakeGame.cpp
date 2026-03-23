@@ -133,10 +133,10 @@ void SnakeGame::drawSnake()
     // head
     Sprite head;
     head.width = 1; head.height = 1;
-    if (_currentDir == UP)    head.path = "head_up.png";
-    if (_currentDir == DOWN)  head.path = "head_down.png";
-    if (_currentDir == LEFT)  head.path = "head_left.png";
-    if (_currentDir == RIGHT) head.path = "head_right.png";
+    if (_currentDir == UP)    head.path = "snake/head_up.png";
+    if (_currentDir == DOWN)  head.path = "snake/head_down.png";
+    if (_currentDir == LEFT)  head.path = "snake/head_left.png";
+    if (_currentDir == RIGHT) head.path = "snake/head_right.png";
     _display->drawSprite(head, _snake[0].first, _snake[0].second);
 
     // body
@@ -144,14 +144,14 @@ void SnakeGame::drawSnake()
         Sprite body;
         body.width = 1; body.height = 1;
         bool horizontal = (_snake[i].second == _snake[i - 1].second);
-        body.path = horizontal ? "body_horizontal.png" : "body_vertical.png";
+        body.path = horizontal ? "snake/body_horizontal.png" : "snake/body_vertical.png";
         _display->drawSprite(body, _snake[i].first, _snake[i].second);
     }
 
     // food
     Sprite food;
     food.width = 1; food.height = 1;
-    food.path = "apple.png";
+    food.path = "snake/apple.png";
     _display->drawSprite(food, _foodPos.first, _foodPos.second);
 }
 
