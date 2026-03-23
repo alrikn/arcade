@@ -50,3 +50,7 @@ void destroy(IDisplayModule* instance)
 }
 
 }
+
+void LibFoo::drawSprite(const Sprite &sprite, int x, int y)
+{
+}

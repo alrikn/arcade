@@ -29,7 +29,8 @@ class LibFoo : public IDisplayModule
         EventType pollEvents() override;
         void drawText(const std::string& text, int x, int y) override;
         void drawTile(ShapeType shape, Color color, int x, int y) override;
-
+        void drawSprite(const Sprite &sprite, int x, int y) override;
+        
         int getWidth() override;
         int getHeight() override;
 

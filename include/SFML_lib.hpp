@@ -19,6 +19,7 @@ class SFML_lib : public ADisplayModule
         const std::string _name = "SFML_lib";
         sf::RenderWindow _window;
         sf::Font _font;
+        std::map<std::string, sf::Texture> _textures;
 
         unsigned int _tileSize = 20;
         int _originX = 0;
@@ -39,6 +40,7 @@ class SFML_lib : public ADisplayModule
         void clear() override;
         void drawTile(ShapeType shape, Color color, int x, int y) override;
         void drawText(const std::string &text, int x, int y) override;
+        void drawSprite(const Sprite &sprite, int x, int y) override;
 
 };
 

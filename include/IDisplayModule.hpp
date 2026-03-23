@@ -45,6 +45,16 @@ enum Color {
 const int HEIGHT = 40;
 const int WIDTH = 60;
 
+struct Sprite {
+    std::string path; // path relative to assets
+    int width = 1; // render with in tiles
+    int height = 1; // render height in tiles
+    int srcX = 0; // source rect X in pixels (offset)
+    int srcY = 0; // source rect Y in pixels (offset)
+    int srcW = 0; // source rect width in pixels
+    int srcH = 0; // source rect height in pixels
+};
+
 class IDisplayModule {
     public:
         virtual ~IDisplayModule() = default;
@@ -65,6 +75,7 @@ class IDisplayModule {
         //we need to keep in mind that while sfml can take a sprite object, ncurses can only draw characters
         //we could have a simple sprite class that can be used by both libraries, and the drawSprite function can take care of the differences between the two libraries
         virtual void drawTile(ShapeType shape, Color color, int x, int y) = 0; //draws a space at the given position (for clearing)
+        virtual void drawSprite(const Sprite &sprite, int x, int y) = 0;
 
         //get width and height of display
         virtual int getWidth() = 0;

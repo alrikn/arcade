@@ -149,6 +149,14 @@ void Ncurses::drawTile(ShapeType shape, Color color, int x, int y)
     attroff(COLOR_PAIR(get_color_pair(color)));
 }
 
+void Ncurses::drawSprite(const Sprite &sprite, int x, int y)
+{
+    (void)sprite;
+    attron(COLOR_PAIR(get_color_pair(WHITE)));
+    mvaddch(y + _originY, x + _originX, '@');
+    attroff(COLOR_PAIR(get_color_pair(WHITE)));
+}
+
 int Ncurses::getNcurseHeight()
 {
     unsigned int width, height;
