@@ -70,5 +70,7 @@ class IDisplayModule {
         virtual int getWidth() = 0;
         virtual int getHeight() = 0;
 
+        virtual char getInputChar() = 0; //get the last input character (for text input)
+
 };
 #endif

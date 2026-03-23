@@ -34,6 +34,8 @@ class Core
 
         std::chrono::steady_clock::time_point _lastMoveTime;
         EventType _lastEvent = OTHER; //last event that isn't other
+
+        std::string player_name;
     public:
         bool _running = true;
         Core();

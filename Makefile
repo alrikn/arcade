@@ -4,6 +4,7 @@
 ## File description:
 ## Makefile
 ##
+##
 
 NAME = arcade
 
@@ -22,8 +23,8 @@ GAME_DIRS = \
 SHARED_FLAGS = -shared -fPIC
 
 
-#where we put to 
-LIB_DIR = lib/graphical_lib
+#where we put to all the libraries
+LIB_DIR = lib/game_lib lib/graphical_lib
 
 CC = clang++
 CFLAGS = -Wall -Wextra -g -Iinclude
@@ -36,16 +37,17 @@ $(NAME): $(OBJ)
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
-libs: | $(LIB_DIR)
+graphical:
+	@for dir in $(GRAPHICAL_DIRS); do \
+		$(MAKE) -C $$dir; \
+	done
+
+#libs needs to execute graphical
+libs:
 	@for dir in $(GRAPHICAL_DIRS); do \
 		$(MAKE) -C $$dir; \
 	done
 	@for dir in $(GAME_DIRS); do \
-		$(MAKE) -C $$dir; \
-	done
-
-graphical:
-	@for dir in $(GRAPHICAL_DIRS); do \
 		$(MAKE) -C $$dir; \
 	done
 
