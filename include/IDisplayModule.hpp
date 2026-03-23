@@ -16,6 +16,7 @@ enum ShapeType {
     EMPTY = -1, //empty is a valid shape type.
     CIRCLE,
     SQUARE,
+    UNKNOWN, // fallback for sprites without a defined shape
 };
 
 enum EventType {
@@ -53,6 +54,8 @@ struct Sprite {
     int srcY = 0; // source rect Y in pixels (offset)
     int srcW = 0; // source rect width in pixels
     int srcH = 0; // source rect height in pixels
+    ShapeType fallback = UNKNOWN; // fallback shape for non-graphical libraries
+    Color fallbackColor = WHITE; // fallback color for non-graphical libraries
 };
 
 class IDisplayModule {

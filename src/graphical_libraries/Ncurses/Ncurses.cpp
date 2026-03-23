@@ -151,10 +151,7 @@ void Ncurses::drawTile(ShapeType shape, Color color, int x, int y)
 
 void Ncurses::drawSprite(const Sprite &sprite, int x, int y)
 {
-    (void)sprite;
-    attron(COLOR_PAIR(get_color_pair(WHITE)));
-    mvaddch(y + _originY, x + _originX, '@');
-    attroff(COLOR_PAIR(get_color_pair(WHITE)));
+    drawTile(sprite.fallback, sprite.fallbackColor, x, y);
 }
 
 int Ncurses::getNcurseHeight()
