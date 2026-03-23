@@ -10,13 +10,35 @@
 
 #include "IDisplayModule.hpp"
 #include <iostream>
+#include "ADisplayModule.hpp"
+#include <SFML/Graphics.hpp>
 
-class SFML_lib : public IDisplayModule
+class SFML_lib : public ADisplayModule
 {
     private:
-    protected:
+        const std::string _name = "SFML_lib";
+        sf::RenderWindow _window;
+        sf::Font _font;
+
+        unsigned int _tileSize = 20;
+        int _originX = 0;
+        int _originY = 0;
+
+        void updateLayout();
     public:
         SFML_lib();
+        ~SFML_lib() = default;
+        const std::string &getName() const override{return _name;}
+
+        void draw() override;
+        EventType pollEvents() override;
+
+        void init() override;
+        void stop() override;
+
+        void clear() override;
+        void drawTile(ShapeType shape, Color color, int x, int y) override;
+        void drawText(const std::string &text, int x, int y) override;
 
 };
 

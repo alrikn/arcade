@@ -65,6 +65,7 @@ void Core::menu_handle()
     if (_lastEvent == QUIT) {
         _menu = false;
         _running = false;
+        return;
     }
     _menu_game.tick(_lastEvent);
     auto [gameLibPath, graphLibPath] = _menu_game.get_path_chosen();
@@ -94,11 +95,12 @@ void Core::load_new_game(std::string game_path)
 void Core::load_new_graphical(std::string graphical_path)
 {
     graphical_module->stop();
-    graphical_loader.reset();
+    graphical_loader.reset(); //this causes a crash
 
     graphical_loader.setHandle(graphical_path);
     graphical_module = graphical_loader.getInstance();
     game_module->load_display(graphical_module);
+    _menu_game.load_display(graphical_module); //we also need to reload the menu with the new graphical library, otherwise when we go back to the menu it will use the old graphical library which is now unloaded, and that will cause a crash when we try to draw with it.
 
     _currentGraphicalLib = graphical_path;
 }

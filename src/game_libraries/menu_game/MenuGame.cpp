@@ -61,6 +61,9 @@ void MenuGame::load_display(IDisplayModule* display)
 
 void MenuGame::tick(EventType input)
 {
+
+    if (!_display)
+        return; //if we don't have a display module, we can't do anything, so we just return
     //input handle
     int maxIndex = _gameLibs.size() + _graphicalLibs.size() - 1;
 
@@ -78,7 +81,7 @@ void MenuGame::tick(EventType input)
         current_graphical_index = global_index - _gameLibs.size();
     }
 
-    //render hander
+    //render handler
     _display->clear();
 
     int y = 0;
