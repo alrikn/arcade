@@ -124,12 +124,35 @@ void SnakeGame::tick(EventType input)
     } else
         _snake.pop_back(); //we remove tail snake if we not eat food
 
-    //update map. //we could actually directly call drawtile func on this
     _display->clear();
-    for (const auto& seg : _snake) {
-        _display->drawTile(SQUARE, GREEN, seg.first, seg.second);
+    drawSnake();
+}
+
+void SnakeGame::drawSnake()
+{
+    // head
+    Sprite head;
+    head.fallback = SQUARE; head.fallbackColor = GREEN;
+    if (_currentDir == UP)    head.path = "snake/head_up.png";
+    if (_currentDir == DOWN)  head.path = "snake/head_down.png";
+    if (_currentDir == LEFT)  head.path = "snake/head_left.png";
+    if (_currentDir == RIGHT) head.path = "snake/head_right.png";
+    _display->drawSprite(head, _snake[0].first, _snake[0].second);
+
+    // body
+    for (size_t i = 1; i < _snake.size(); i++) {
+        Sprite body;
+        body.fallback = SQUARE; body.fallbackColor = GREEN;
+        bool horizontal = (_snake[i].second == _snake[i - 1].second);
+        body.path = horizontal ? "snake/body_horizontal.png" : "snake/body_vertical.png";
+        _display->drawSprite(body, _snake[i].first, _snake[i].second);
     }
-    _display->drawTile(CIRCLE, RED, _foodPos.first, _foodPos.second);
+
+    // food
+    Sprite food;
+    food.fallback = CIRCLE; food.fallbackColor = RED;
+    food.path = "snake/apple.png";
+    _display->drawSprite(food, _foodPos.first, _foodPos.second);
 }
 
 void SnakeGame::generateFood()

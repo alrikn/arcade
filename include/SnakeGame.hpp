@@ -48,6 +48,7 @@ class SnakeGame : public AGameModule
         void exit() override;
 
         void generateFood(); //random food generation
+        void drawSnake();
 
         bool checkCollision(int x, int y); //check for collision with walls and snake body
 
