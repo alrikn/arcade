@@ -15,7 +15,7 @@ SnakeGame::SnakeGame()
 {
     std::cout << "[" << _name << "] Constructor called" << std::endl;
 
-    this->set_elapsed(40); //otherwise snake goes way too fast
+    this->set_elapsed(60); //otherwise snake goes way too fast
 
     int start_x = WIDTH / 2;
     int start_y = HEIGHT / 2;

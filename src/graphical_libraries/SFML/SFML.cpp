@@ -98,8 +98,6 @@ EventType SFML_lib::pollEvents()
     return OTHER;
 }
 
-
-
 void SFML_lib::stop()
 {
     //we will close the window and free any resources
