@@ -186,8 +186,13 @@ void MenuGame::tick(EventType input)
         global_index--;
     if (input == S_KEY && global_index < maxIndex)
         global_index++;
-    if (input == SPACE_KEY)
+    if (input == SPACE_KEY) {
+        if (global_index < (int)_gameLibs.size())
+            selected_game_index = global_index;
+        else
+            selected_graphical_index = global_index - _gameLibs.size();
         selected_option = true;
+    }
 
     //global index handle
     if (global_index < (int)_gameLibs.size()) {
@@ -230,8 +235,8 @@ void MenuGame::tick(EventType input)
 std::tuple<std::string, std::string> MenuGame::get_path_chosen()
 {
     if (selected_option) {
-        std::string gameLibPath = "./lib/game_lib/" + _gameLibs[current_game_index];
-        std::string graphLibPath = "./lib/graphical_lib/" + _graphicalLibs[current_graphical_index];
+        std::string gameLibPath = "./lib/game_lib/" + _gameLibs[selected_game_index];
+        std::string graphLibPath = "./lib/graphical_lib/" + _graphicalLibs[selected_graphical_index];
         selected_option = false; //reset for next time we go to the menu
         return {gameLibPath, graphLibPath};
     }

@@ -38,6 +38,9 @@ class MenuGame : public AGameModule
 
         const std::string highscore_file = "highscores.json";
         nlohmann::json highscore_json;
+
+        int selected_game_index = 0;
+        int selected_graphical_index = 0;
     public:
         MenuGame();
         ~MenuGame() {write_highscore_file();}
