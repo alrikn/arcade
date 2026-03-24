@@ -141,7 +141,7 @@ void SFML_lib::drawTile(ShapeType shape, Color color, int x, int y)
     }
 }
 
-void SFML_lib::drawText(const std::string &text, int x, int y)
+void SFML_lib::drawText(const std::string &text, Color color, int x, int y)
 {
     if (!_window.isOpen())
         return;
@@ -150,7 +150,7 @@ void SFML_lib::drawText(const std::string &text, int x, int y)
     sfText.setFont(_font);
     sfText.setString(text);
     sfText.setCharacterSize(18);
-    sfText.setFillColor(sf::Color::White);
+    sfText.setFillColor(toSfColor(color));
     sfText.setPosition(
         static_cast<float>(_originX + x * static_cast<int>(_tileSize)),
         static_cast<float>(_originY + y * static_cast<int>(_tileSize))

@@ -129,10 +129,12 @@ EventType Ncurses::pollEvents()
 
 
 
-void Ncurses::drawText(const std::string& text, int x, int y)
+void Ncurses::drawText(const std::string& text, Color color, int x, int y)
 {
     //move the cursor to the given position and print the text
+    attron(COLOR_PAIR(get_color_pair(color)));
     mvprintw(y + _originY, x + _originX, "%s", text.c_str());
+    attroff(COLOR_PAIR(get_color_pair(color)));
 }
 
 
