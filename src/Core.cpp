@@ -33,7 +33,7 @@ void Core::run()
     game_module->load_display(graphical_module);
     _menu_game.load_display(graphical_module);
     _elapsed = _menu_game.get_elapsed();
-    bool loaded_menu = false; //we use this to track whether we've loaded the menu or not, so we don't keep reloading it every frame
+    graphical_module->init();
 
     while (_running) {
         update_event();
@@ -41,6 +41,7 @@ void Core::run()
         if ((_lastEvent == QUIT || _lastEvent == MENU) && !_menu) {
             _menu = true;
             _menu_game.update_highscore(game_module->getName(), game_module->get_highscore());
+            _elapsed = _menu_game.get_elapsed();
             _lastEvent = OTHER; //we reset the last event to other so we don't immediately exit the menu again
         }
         auto now = std::chrono::steady_clock::now();
@@ -108,4 +109,5 @@ void Core::load_new_graphical(std::string graphical_path)
     _menu_game.load_display(graphical_module); //we also need to reload the menu with the new graphical library, otherwise when we go back to the menu it will use the old graphical library which is now unloaded, and that will cause a crash when we try to draw with it.
 
     _currentGraphicalLib = graphical_path;
+    graphical_module->init();
 }
