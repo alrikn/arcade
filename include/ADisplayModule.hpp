@@ -27,6 +27,11 @@ class ADisplayModule : public IDisplayModule
         {
             return _height;
         }
+
+        virtual char getInputChar() override
+        {
+            return '\0'; //by default, we return null character, which means no input
+        }
 };
 
 

@@ -30,12 +30,54 @@ const std::string &SnakeGame::getName() const
     return _name;
 }
 
+bool SnakeGame::checkCollision(int x, int y)
+{
+    //check for coll with walls
+    if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) {
+        return true;
+    }
+    //now we check coll with itself
+    auto head = _snake.front();
+    for (size_t i = 1; i < _snake.size(); i++) {
+        if (_snake[i] == head) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void SnakeGame::reset_game(EventType input)
+{
+    _display->clear();
+    _display->drawText("Game Over! Press SPACE to restart", WIDTH / 2 - 10, HEIGHT / 2);
+    _display->drawText("Score: " + std::to_string(_score), WIDTH / 2 - 10, HEIGHT / 2 + 1);
+    _display->drawText("High Score: " + std::to_string(_highscore), WIDTH / 2 - 10, HEIGHT / 2 + 2);
+
+    _display->draw();
+
+    if (input == SPACE_KEY) {
+        if (_score > _highscore) {
+            set_highscore(_score);
+        }
+        _score = 0;
+        _snake.clear();
+        int start_x = WIDTH / 2;
+        int start_y = HEIGHT / 2;
+        _snake.push_back({start_x, start_y});
+        generateFood();
+        _gameover = false;
+    }
+}
+
 
 //for now we'll assume that the width and height of the game is 10*10 but in the future display and width will need to be given by the display module, and the game will need to adapt to it, but for now we'll just hardcode it for testing purposes.
 void SnakeGame::tick(EventType input)
 {
-    //_display->pollEvents(); //we poll for events every tick
-    //_events = _display->getEvents();//user input
+    //first we check for game over
+    if (_gameover) {
+        reset_game(input);
+        return;
+    }
 
 
     if (input == W_KEY && _currentDir != DOWN)
@@ -67,17 +109,9 @@ void SnakeGame::tick(EventType input)
     }
 
     //check for coll with walls
-    if (head_x < 0 || head_x >= WIDTH || head_y < 0 || head_y >= HEIGHT) {
+    if (checkCollision(head_x, head_y)) {
         _gameover = true;
         return;
-    }
-    //now we check coll with itself
-    auto head = _snake.front();
-    for (size_t i = 1; i < _snake.size(); i++) {
-        if (_snake[i] == head) {
-            _gameover = true;
-            return;
-        }
     }
 
     bool ateFood = (head_x == _foodPos.first && head_y == _foodPos.second);
