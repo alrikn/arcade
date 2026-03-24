@@ -169,12 +169,20 @@ void SFML_lib::drawSprite(const Sprite &sprite, int x, int y)
 
     const std::string fullPath = "assets/" + sprite.path;
 
+    if (_failedTextures.count(fullPath)) {
+        drawTile(sprite.fallback, sprite.fallbackColor, x, y);
+        return;
+    }
+
     if (_textures.find(fullPath) == _textures.end()) {
         sf::Texture &stored = _textures[fullPath];
         if (!stored.loadFromFile(fullPath)) {
             std::cerr << "Failed to load sprite: " << fullPath << std::endl;
             _textures.erase(fullPath);
-        }        
+            _failedTextures.insert(fullPath);
+            drawTile(sprite.fallback, sprite.fallbackColor, x, y);
+            return;
+        }
     }
 
     const sf::Texture &tex = _textures.at(fullPath);
@@ -189,8 +197,8 @@ void SFML_lib::drawSprite(const Sprite &sprite, int x, int y)
     }
 
     sfSprite.setScale(
-        (sprite.width * static_cast<float>(_tileSize)) / srcW,
-        (sprite.height * static_cast<float>(_tileSize)) / srcH
+        static_cast<float>(_tileSize) / srcW,
+        static_cast<float>(_tileSize) / srcH
     );
     sfSprite.setPosition(
         static_cast<float>(_originX + x * static_cast<int>(_tileSize)),

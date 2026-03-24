@@ -9,6 +9,7 @@
     #define INCLUDED_IDISPLAYMODULE_HPP
 
 
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -48,12 +49,10 @@ const int WIDTH = 60;
 
 struct Sprite {
     std::string path; // path relative to assets
-    int width = 1; // render with in tiles
-    int height = 1; // render height in tiles
-    int srcX = 0; // source rect X in pixels (offset)
-    int srcY = 0; // source rect Y in pixels (offset)
-    int srcW = 0; // source rect width in pixels
-    int srcH = 0; // source rect height in pixels
+    uint8_t srcX = 0; // source rect X in pixels (offset)
+    uint8_t srcY = 0; // source rect Y in pixels (offset)
+    uint8_t srcW = 0; // source rect width in pixels
+    uint8_t srcH = 0; // source rect height in pixels
     ShapeType fallback = UNKNOWN; // fallback shape for non-graphical libraries
     Color fallbackColor = WHITE; // fallback color for non-graphical libraries
 };

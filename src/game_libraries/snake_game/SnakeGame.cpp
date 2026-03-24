@@ -132,7 +132,6 @@ void SnakeGame::drawSnake()
 {
     // head
     Sprite head;
-    head.width = 1; head.height = 1;
     head.fallback = SQUARE; head.fallbackColor = GREEN;
     if (_currentDir == UP)    head.path = "snake/head_up.png";
     if (_currentDir == DOWN)  head.path = "snake/head_down.png";
@@ -143,7 +142,6 @@ void SnakeGame::drawSnake()
     // body
     for (size_t i = 1; i < _snake.size(); i++) {
         Sprite body;
-        body.width = 1; body.height = 1;
         body.fallback = SQUARE; body.fallbackColor = GREEN;
         bool horizontal = (_snake[i].second == _snake[i - 1].second);
         body.path = horizontal ? "snake/body_horizontal.png" : "snake/body_vertical.png";
@@ -152,7 +150,6 @@ void SnakeGame::drawSnake()
 
     // food
     Sprite food;
-    food.width = 1; food.height = 1;
     food.fallback = CIRCLE; food.fallbackColor = RED;
     food.path = "snake/apple.png";
     _display->drawSprite(food, _foodPos.first, _foodPos.second);

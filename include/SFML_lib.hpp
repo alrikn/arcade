@@ -10,6 +10,7 @@
 
 #include "IDisplayModule.hpp"
 #include <iostream>
+#include <set>
 #include "ADisplayModule.hpp"
 #include <SFML/Graphics.hpp>
 
@@ -20,6 +21,7 @@ class SFML_lib : public ADisplayModule
         sf::RenderWindow _window;
         sf::Font _font;
         std::map<std::string, sf::Texture> _textures;
+        std::set<std::string> _failedTextures;
 
         unsigned int _tileSize = 20;
         int _originX = 0;
