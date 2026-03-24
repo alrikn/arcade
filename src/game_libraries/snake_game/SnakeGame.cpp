@@ -15,7 +15,7 @@ SnakeGame::SnakeGame()
 {
     std::cout << "[" << _name << "] Constructor called" << std::endl;
 
-    this->set_elapsed(40); //otherwise snake goes way too fast
+    this->set_elapsed(60); //otherwise snake goes way too fast
 
     int start_x = WIDTH / 2;
     int start_y = HEIGHT / 2;
@@ -49,9 +49,9 @@ bool SnakeGame::checkCollision(int x, int y)
 void SnakeGame::reset_game(EventType input)
 {
     _display->clear();
-    _display->drawText("Game Over! Press SPACE to restart", WIDTH / 2 - 10, HEIGHT / 2);
-    _display->drawText("Score: " + std::to_string(_score), WIDTH / 2 - 10, HEIGHT / 2 + 1);
-    _display->drawText("High Score: " + std::to_string(_highscore), WIDTH / 2 - 10, HEIGHT / 2 + 2);
+    _display->drawText("Game Over! Press SPACE to restart", WHITE, WIDTH / 2 - 10, HEIGHT / 2);
+    _display->drawText("Score: " + std::to_string(_score), WHITE, WIDTH / 2 - 10, HEIGHT / 2 + 1);
+    _display->drawText("High Score: " + std::to_string(_highscore), WHITE, WIDTH / 2 - 10, HEIGHT / 2 + 2);
 
     _display->draw();
 

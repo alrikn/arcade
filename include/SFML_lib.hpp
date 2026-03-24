@@ -41,7 +41,7 @@ class SFML_lib : public ADisplayModule
 
         void clear() override;
         void drawTile(ShapeType shape, Color color, int x, int y) override;
-        void drawText(const std::string &text, int x, int y) override;
+        void drawText(const std::string &text, Color color, int x, int y) override;
         void drawSprite(const Sprite &sprite, int x, int y) override;
 
 };

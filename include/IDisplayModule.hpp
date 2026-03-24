@@ -72,7 +72,7 @@ class IDisplayModule {
 
 
         //drawing functions (these are just examples, we can add more as needed)
-        virtual void drawText(const std::string& text, int x, int y) = 0; //draws text at the given position
+        virtual void drawText(const std::string& text, Color color, int x, int y) = 0; //draws text at the given position
 
         //we need to keep in mind that while sfml can take a sprite object, ncurses can only draw characters
         //we could have a simple sprite class that can be used by both libraries, and the drawSprite function can take care of the differences between the two libraries
