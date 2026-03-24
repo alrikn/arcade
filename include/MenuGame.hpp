@@ -12,6 +12,8 @@
 #include "IGameModule.hpp"
 #include <iostream>
 #include <vector>
+#include "json.hpp" //the offical nlohman library
+#include <fstream>
 
 class MenuGame : public AGameModule
 {
@@ -33,9 +35,12 @@ class MenuGame : public AGameModule
 
         std::string player_name = ""; //we'll use it at the start of the menu, then we'll pass it to core
         bool name_entered = false; //this will be set to true when the user has entered their name, and it will be used to determine when to show the rest of the menu options
+
+        const std::string highscore_file = "highscores.json";
+        nlohmann::json highscore_json;
     public:
         MenuGame();
-        ~MenuGame() = default;
+        ~MenuGame() {write_highscore_file();}
         std::tuple<std::string, std::string> get_path_chosen(); //game lib path, graph lib path
 
         const std::string &getName() const override;
@@ -48,6 +53,15 @@ class MenuGame : public AGameModule
         //is a loop of its own that handles name input
         //gets called only once when the core boots up the menu, and it will keep looping until the user has entered their name, and then it will set name_entered to true and return the name, which will be stored in player_name
         void handle_name_input(void);
+
+        //we will use json for high score file
+        void read_highscore_file(void);
+
+        //we just update all of the high score inside the gfile at once
+        void write_highscore_file(void);
+
+        //this func will be called by the core when the game is over
+        void update_highscore(std::string game_name, unsigned int highscore);
 
 };
 

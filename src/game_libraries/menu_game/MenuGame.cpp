@@ -80,8 +80,62 @@ void MenuGame::handle_name_input(void)
         _display->drawText(player_name + "_", 0, 1); //we add an underscore to indicate the cursor position
         _display->draw();
     }
+
+    read_highscore_file();// read high score
 }
 
+//this file needs to be able to handle that there is no file
+void MenuGame::read_highscore_file(void)
+{
+    std::ifstream file(highscore_file);
+
+    if (!file.is_open()) {
+        std::cout << "High score file not found, starting with empty high scores." << std::endl;
+        return;
+    }
+    // Process the file
+    try {
+        file >> highscore_json;
+    } catch (const std::exception& e) {
+        std::cout << "Error reading high score file: " << e.what() << std::endl;
+    }
+}
+
+void MenuGame::write_highscore_file(void)
+{
+    std::ofstream file(highscore_file);
+    if (file.is_open()) {
+        file << highscore_json.dump(4); //to make sure it prints nicely
+        file.close();
+    }
+}
+
+void MenuGame::update_highscore(std::string game_name, unsigned int highscore)
+{
+    if (highscore_json.contains(game_name)) {
+        if (highscore > highscore_json[game_name][player_name]) {
+            highscore_json[game_name][player_name] = highscore;
+        }
+    } else {
+        highscore_json[game_name][player_name] = highscore;
+    }
+}
+
+/*
+** as a new feature, the menu needs to be able to display the high score of each game
+** this also means that the high score needs to be stored in a file made by the core
+** the high scores will be given initially by the core to the menu, and then on menu exit, we return them to menu so that it can write stuff
+**
+** OR (better solution)
+** the menu can directly read and write the high score file,
+** since it has access to the display module,
+** it can also have access to the file system,
+** and it can read and write the high score file directly,
+** this way we don't need to pass the high scores back and forth between the core and the menu,
+** and we can also update the high scores in real time while we're in the menu,
+** so that if the user plays a game and gets a new high score,
+** they can see it immediately in the menu without having to go back to the menu first.
+*/
 void MenuGame::tick(EventType input)
 {
 

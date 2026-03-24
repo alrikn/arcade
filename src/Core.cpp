@@ -82,6 +82,10 @@ void Core::menu_handle()
 
 void Core::load_new_game(std::string game_path)
 {
+    //before anything we update the high score
+    _menu_game.update_highscore(game_module->getName(), game_module->get_highscore());
+
+    //now thats done we can exit
     game_module->exit();
     game_loader.reset();
 
