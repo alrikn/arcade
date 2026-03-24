@@ -239,9 +239,13 @@ void TetrisGame::tick(EventType input)
     else if (input == W_KEY)
         rotateCurrentRight();
 
-    // gravity
-    moveCurrent(0, 1);
-
+    // gravity now time based
+    auto now = std::chrono::steady_clock::now();
+    auto elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(now - _lastFallTime).count();
+    if (elapsedMs >= _fallIntervalMs) {
+        moveCurrent(0, 1);
+        _lastFallTime = now;
+    }
     render();
 }
 
