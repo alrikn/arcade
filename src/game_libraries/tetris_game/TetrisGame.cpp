@@ -187,20 +187,24 @@ void TetrisGame::render()
 
     _display->clear();
 
-    // draw the border around the board so its visivble
+    // draw border
     for (int x = -1; x <= BOARD_WIDTH; ++x) {
-        _display->drawTile(SQUARE, WHITE, _offsetX + x, _offsetY - 1);
-        _display->drawTile(SQUARE, WHITE, _offsetX + x, _offsetY + BOARD_HEIGHT);
+        _display->drawText("-", _offsetX + x, _offsetY - 1);
+        _display->drawText("-", _offsetX + x, _offsetY + BOARD_HEIGHT);
     }
+    _display->drawText("+", _offsetX - 1, _offsetY - 1);
+    _display->drawText("+", _offsetX + BOARD_WIDTH, _offsetY - 1);
+    _display->drawText("+", _offsetX - 1, _offsetY + BOARD_HEIGHT);
+    _display->drawText("+", _offsetX + BOARD_WIDTH, _offsetY + BOARD_HEIGHT);
     for (int y = 0; y < BOARD_HEIGHT; ++y) {
-        _display->drawTile(SQUARE, WHITE, _offsetX - 1, _offsetY + y);
-        _display->drawTile(SQUARE, WHITE, _offsetX + BOARD_WIDTH, _offsetY + y);
+        _display->drawText("|", _offsetX - 1, _offsetY + y);
+        _display->drawText("|", _offsetX + BOARD_WIDTH, _offsetY + y);
     }
 
     for (int y = 0; y < BOARD_HEIGHT; ++y) {
         for (int x = 0; x < BOARD_WIDTH; ++x) {
             if (_board[y][x] != 0)
-                _display->drawTile(SQUARE, CYAN, _offsetX + x, _offsetY + y);
+                _display->drawText("#", _offsetX + x, _offsetY + y);
         }
     }
 
@@ -209,7 +213,7 @@ void TetrisGame::render()
             for (int col = 0; col < SHAPE_SIZE; ++col) {
                 if (SHAPES[_currentShape][_currentRotation][row][col] == 0)
                     continue;
-                _display->drawTile(SQUARE, BLUE, _offsetX + _currentX + col, _offsetY + _currentY + row);
+                _display->drawText("@", _offsetX + _currentX + col, _offsetY + _currentY + row);
             }
         }
     }
