@@ -63,6 +63,9 @@ class MenuGame : public AGameModule
         //this func will be called by the core when the game is over
         void update_highscore(std::string game_name, unsigned int highscore);
 
+        void drawBox(int startX, int startY, int width, int height);
+
+        void displayHighscores(int startX, int startY);
 };
 
 #endif

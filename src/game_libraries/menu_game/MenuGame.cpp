@@ -121,21 +121,59 @@ void MenuGame::update_highscore(std::string game_name, unsigned int highscore)
     }
 }
 
-/*
-** as a new feature, the menu needs to be able to display the high score of each game
-** this also means that the high score needs to be stored in a file made by the core
-** the high scores will be given initially by the core to the menu, and then on menu exit, we return them to menu so that it can write stuff
-**
-** OR (better solution)
-** the menu can directly read and write the high score file,
-** since it has access to the display module,
-** it can also have access to the file system,
-** and it can read and write the high score file directly,
-** this way we don't need to pass the high scores back and forth between the core and the menu,
-** and we can also update the high scores in real time while we're in the menu,
-** so that if the user plays a game and gets a new high score,
-** they can see it immediately in the menu without having to go back to the menu first.
-*/
+//draw box looks terrible in sfml, bcause we are just drawing text, and in sfml, no all cjhars are same width
+void MenuGame::drawBox(int startX, int startY, int width, int height)
+{
+    if (width > WIDTH)
+        width = WIDTH; //60
+    if (height > HEIGHT)
+        height = HEIGHT; //40
+    std::string horizontal = "+" + std::string(width - 2, '-') + "+";
+
+    // Top border
+    _display->drawText(horizontal, startX, startY);
+
+    // Sides
+    for (int i = 1; i < height - 1; i++) {
+        _display->drawText("|" + std::string(width - 2, ' ') + "|", startX, startY + i);
+    }
+
+    // Bottom border
+    _display->drawText(horizontal, startX, startY + height - 1);
+}
+
+void MenuGame::displayHighscores(int startX, int startY)
+{
+    //int boxWidth = 40;
+    //int boxHeight = 10;
+
+    //drawBox(startX, startY, boxWidth, boxHeight);
+
+
+    // Title
+    _display->drawText(" Highscores: ", 0, startY + 1);
+
+    if (highscore_json.empty()) {
+        _display->drawText(" No scores yet", startX + 2, startY + 3);
+        return;
+    }
+
+    int y = startY + 3;
+    int rank = 1;
+    //now we loop through the high score json and display the high score of the current user one evry game
+
+    for (auto& [game_name, scores] : highscore_json.items()) {
+        if (scores.contains(player_name)) {
+            unsigned int score = scores[player_name];
+            _display->drawText(std::to_string(rank) + ". " + game_name + ": " + std::to_string(score), startX + 2, y++);
+            rank++;
+        }
+
+        if (rank > 5) break; // limit display
+    }
+}
+
+
 void MenuGame::tick(EventType input)
 {
 
@@ -185,6 +223,8 @@ void MenuGame::tick(EventType input)
         _display->drawText(prefix + lib, 2, y++);
         index++;
     }
+
+    displayHighscores(0, y + 1);
 }
 
 std::tuple<std::string, std::string> MenuGame::get_path_chosen()
