@@ -76,8 +76,8 @@ void MenuGame::handle_name_input(void)
 
         //render the name input screen
         _display->clear();
-        _display->drawText("Please enter your name:", 0, 0);
-        _display->drawText(player_name + "_", 0, 1); //we add an underscore to indicate the cursor position
+        _display->drawText("Please enter your name:", WHITE, 0, 0);
+        _display->drawText(player_name + "_", WHITE, 0, 1); //we add an underscore to indicate the cursor position
         _display->draw();
     }
 
@@ -131,15 +131,15 @@ void MenuGame::drawBox(int startX, int startY, int width, int height)
     std::string horizontal = "+" + std::string(width - 2, '-') + "+";
 
     // Top border
-    _display->drawText(horizontal, startX, startY);
+    _display->drawText(horizontal, WHITE, startX, startY);
 
     // Sides
     for (int i = 1; i < height - 1; i++) {
-        _display->drawText("|" + std::string(width - 2, ' ') + "|", startX, startY + i);
+        _display->drawText("|" + std::string(width - 2, ' ') + "|", WHITE, startX, startY + i);
     }
 
     // Bottom border
-    _display->drawText(horizontal, startX, startY + height - 1);
+    _display->drawText(horizontal, WHITE, startX, startY + height - 1);
 }
 
 void MenuGame::displayHighscores(int startX, int startY)
@@ -151,10 +151,10 @@ void MenuGame::displayHighscores(int startX, int startY)
 
 
     // Title
-    _display->drawText(" Highscores: ", 0, startY + 1);
+    _display->drawText(" Highscores: ", WHITE, startX + 2, startY + 1);
 
     if (highscore_json.empty()) {
-        _display->drawText(" No scores yet", startX + 2, startY + 3);
+        _display->drawText(" No scores yet", WHITE, startX + 2, startY + 3);
         return;
     }
 
@@ -165,7 +165,7 @@ void MenuGame::displayHighscores(int startX, int startY)
     for (auto& [game_name, scores] : highscore_json.items()) {
         if (scores.contains(player_name)) {
             unsigned int score = scores[player_name];
-            _display->drawText(std::to_string(rank) + ". " + game_name + ": " + std::to_string(score), startX + 2, y++);
+            _display->drawText(std::to_string(rank) + ". " + game_name + ": " + std::to_string(score), WHITE, startX + 2, y++);
             rank++;
         }
 
@@ -202,25 +202,25 @@ void MenuGame::tick(EventType input)
     int y = 0;
     int index = 0;
 
-    _display->drawText("Welcome to the Arcade!", 0, y++);
-    _display->drawText("Use W/S to navigate", 0, y++);
-    _display->drawText("Press SPACE to select", 0, y++);
-    _display->drawText("Press Q to quit", 0, y++);
+    _display->drawText("Welcome to the Arcade!", WHITE, 0, y++);
+    _display->drawText("Use W/S to navigate", WHITE, 0, y++);
+    _display->drawText("Press SPACE to select", WHITE, 0, y++);
+    _display->drawText("Press Q to quit", WHITE, 0, y++);
     y++; //for readability
 
-    _display->drawText("Available Game Libraries:", 0, y++);
+    _display->drawText("Available Game Libraries:", WHITE, 0, y++);
     for (const auto& lib : _gameLibs) {
         std::string prefix = (global_index == index) ? "> " : "  ";
-        _display->drawText(prefix + lib, 2, y++);
+        _display->drawText(prefix + lib, WHITE, 2, y++);
         index++;
     }
 
     y++;
 
-    _display->drawText("Available Graphical Libraries:", 0, y++);
+    _display->drawText("Available Graphical Libraries:", WHITE, 0, y++);
     for (const auto& lib : _graphicalLibs) {
         std::string prefix = (global_index == index) ? "> " : "  ";
-        _display->drawText(prefix + lib, 2, y++);
+        _display->drawText(prefix + lib, WHITE, 2, y++);
         index++;
     }
 
