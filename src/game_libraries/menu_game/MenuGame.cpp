@@ -112,7 +112,7 @@ void MenuGame::write_highscore_file(void)
 
 void MenuGame::update_highscore(std::string game_name, unsigned int highscore)
 {
-    if (highscore_json.contains(game_name)) {
+    if (highscore_json.contains(game_name) && highscore_json[game_name].contains(player_name)) {
         if (highscore > highscore_json[game_name][player_name]) {
             highscore_json[game_name][player_name] = highscore;
         }

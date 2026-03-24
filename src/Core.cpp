@@ -40,6 +40,7 @@ void Core::run()
 
         if ((_lastEvent == QUIT || _lastEvent == MENU) && !_menu) {
             _menu = true;
+            _menu_game.update_highscore(game_module->getName(), game_module->get_highscore());
             _lastEvent = OTHER; //we reset the last event to other so we don't immediately exit the menu again
         }
         auto now = std::chrono::steady_clock::now();
