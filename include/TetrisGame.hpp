@@ -12,6 +12,7 @@
 #include <array>
 #include <vector>
 #include <string>
+#include <chrono>
 
 class TetrisGame : public AGameModule
 {
@@ -33,7 +34,6 @@ class TetrisGame : public AGameModule
 
         const std::string _name = "TetrisGame";
 
-        // 0 = empty, 1 = filled
         std::vector<std::vector<int>> _board;
 
         int _currentShape = 0;
@@ -43,6 +43,10 @@ class TetrisGame : public AGameModule
 
         int _offsetX = 0;
         int _offsetY = 0;
+
+        // gravitu is now handled speratly
+        int _fallIntervalMs = 350;
+        std::chrono::steady_clock::time_point _lastFallTime;
 
         void initBoard();
         void spawnPiece();
