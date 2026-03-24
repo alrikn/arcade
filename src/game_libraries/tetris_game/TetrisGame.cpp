@@ -116,3 +116,44 @@ bool TetrisGame::canPlace(int shape, int rotation, int x, int y) const
     }
     return true;
 }
+
+void TetrisGame::moveCurrent(int dx, int dy)
+{
+    int nx = _currentX + dx;
+    int ny = _currentY + dy;
+
+    if (canPlace(_currentShape, _currentRotation, nx, ny)) {
+        _currentX = nx;
+        _currentY = ny;
+        return;
+    }
+
+    // if it cant move down, the piece is fixed to the board
+    if (dy == 1) {
+        lockCurrentPiece();
+        clearFullLines();
+        spawnPiece();
+    }
+}
+
+void TetrisGame::rotateCurrentRight()
+{
+    int nextRotation = (_currentRotation + 1) % ROTATION_COUNT;
+    if (canPlace(_currentShape, nextRotation, _currentX, _currentY))
+        _currentRotation = nextRotation;
+}
+
+void TetrisGame::lockCurrentPiece()
+{
+    for (int row = 0; row < SHAPE_SIZE; ++row) {
+        for (int col = 0; col < SHAPE_SIZE; ++col) {
+            if (SHAPES[_currentShape][_currentRotation][row][col] == 0)
+                continue;
+
+            int bx = _currentX + col;
+            int by = _currentY + row;
+            if (bx >= 0 && bx < BOARD_WIDTH && by >= 0 && by < BOARD_HEIGHT)
+                _board[by][bx] = 1;
+        }
+    }
+}
