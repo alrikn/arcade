@@ -1,4 +1,4 @@
-# Arcade 
+# Arcade  
 
 A modular arcade framework that lets you mix and match graphical backends and games at runtime through dynamic library loading. The core engine, graphical renderers, and games are completely decoupled — you can swap any component without recompiling anything else.
 
