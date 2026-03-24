@@ -177,3 +177,81 @@ void TetrisGame::clearFullLines()
         y++; // re check same line index after collapse bc maybe the line created is full
     }
 }
+
+void TetrisGame::render()
+{
+    if (!_display)
+        return;
+
+    _display->clear();
+
+    // draw the border around the board so its visivble
+    for (int x = -1; x <= BOARD_WIDTH; ++x) {
+        _display->drawTile(SQUARE, WHITE, _offsetX + x, _offsetY - 1);
+        _display->drawTile(SQUARE, WHITE, _offsetX + x, _offsetY + BOARD_HEIGHT);
+    }
+    for (int y = 0; y < BOARD_HEIGHT; ++y) {
+        _display->drawTile(SQUARE, WHITE, _offsetX - 1, _offsetY + y);
+        _display->drawTile(SQUARE, WHITE, _offsetX + BOARD_WIDTH, _offsetY + y);
+    }
+
+    for (int y = 0; y < BOARD_HEIGHT; ++y) {
+        for (int x = 0; x < BOARD_WIDTH; ++x) {
+            if (_board[y][x] != 0)
+                _display->drawTile(SQUARE, CYAN, _offsetX + x, _offsetY + y);
+        }
+    }
+
+    if (!_gameover) {
+        for (int row = 0; row < SHAPE_SIZE; ++row) {
+            for (int col = 0; col < SHAPE_SIZE; ++col) {
+                if (SHAPES[_currentShape][_currentRotation][row][col] == 0)
+                    continue;
+                _display->drawTile(SQUARE, BLUE, _offsetX + _currentX + col, _offsetY + _currentY + row);
+            }
+        }
+    }
+
+    _display->drawText("tetris: ARROW KEYS: left/right move, up rotate", _offsetX - 6, _offsetY + BOARD_HEIGHT + 1);
+    if (_gameover)
+        _display->drawText("GAME OVER", _offsetX + 1, _offsetY + (BOARD_HEIGHT / 2));
+}
+
+void TetrisGame::tick(EventType input)
+{
+    if (_gameover) {
+        render();
+        return;
+    }
+
+    if (input == A_KEY)
+        moveCurrent(-1, 0);
+    else if (input == D_KEY)
+        moveCurrent(1, 0);
+    else if (input == W_KEY)
+        rotateCurrentRight();
+
+    // gravity
+    moveCurrent(0, 1);
+
+    render();
+}
+
+void TetrisGame::exit()
+{
+    std::cout << "[" << _name << "] exit called" << std::endl;
+}
+
+extern "C" {
+
+IGameModule *create()
+{
+    return new TetrisGame();
+}
+
+void destroy(IGameModule *instance)
+{
+    delete instance;
+}
+
+}
