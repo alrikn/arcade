@@ -62,3 +62,57 @@ const int TetrisGame::SHAPES[SHAPE_COUNT][ROTATION_COUNT][SHAPE_SIZE][SHAPE_SIZE
         {{1, 1, 0, 0}, {0, 1, 0, 0}, {0, 1, 0, 0}, {0, 0, 0, 0}}
     }
 };
+
+TetrisGame::TetrisGame()
+{
+    std::cout << "[" << _name << "] constructor called" << std::endl;
+    std::srand(static_cast<unsigned int>(std::time(nullptr))); // each run the piece sequence will be diff
+
+    _offsetX = (WIDTH - BOARD_WIDTH) / 2;
+    _offsetY = (HEIGHT - BOARD_HEIGHT) / 2;
+
+    set_elapsed(350); // control speed
+    initBoard();
+    spawnPiece();
+}
+
+const std::string &TetrisGame::getName() const
+{
+    return _name;
+}
+
+void TetrisGame::initBoard()
+{
+    _board.assign(BOARD_HEIGHT, std::vector<int>(BOARD_WIDTH, 0));
+}
+
+void TetrisGame::spawnPiece()
+{
+    _currentShape = std::rand() % SHAPE_COUNT;
+    _currentRotation = 0;
+    _currentX = (BOARD_WIDTH / 2) - 2;
+    _currentY = 0;
+
+    if (!canPlace(_currentShape, _currentRotation, _currentX, _currentY))
+        _gameover = true;
+}
+
+bool TetrisGame::canPlace(int shape, int rotation, int x, int y) const
+{
+    for (int row = 0; row < SHAPE_SIZE; ++row) {
+        for (int col = 0; col < SHAPE_SIZE; ++col) {
+            if (SHAPES[shape][rotation][row][col] == 0)
+                continue;
+
+            int bx = x + col;
+            int by = y + row;
+
+            if (bx < 0 || bx >= BOARD_WIDTH || by < 0 || by >= BOARD_HEIGHT)
+                return false;
+
+            if (_board[by][bx] != 0)
+                return false;
+        }
+    }
+    return true;
+}
