@@ -218,7 +218,7 @@ void TetrisGame::render()
         }
     }
 
-    _display->drawText("tetris: ARROW KEYS: left/right move, up rotate", _offsetX - 6, _offsetY + BOARD_HEIGHT + 1);
+    _display->drawText("tetris: left/right move, up rotate, down soft drop", _offsetX - 6, _offsetY + BOARD_HEIGHT + 1);
     if (_gameover)
         _display->drawText("GAME OVER", _offsetX + 1, _offsetY + (BOARD_HEIGHT / 2));
 }
@@ -234,6 +234,8 @@ void TetrisGame::tick(EventType input)
         moveCurrent(-1, 0);
     else if (input == D_KEY)
         moveCurrent(1, 0);
+    else if (input == S_KEY)
+        moveCurrent(0, 1);
     else if (input == W_KEY)
         rotateCurrentRight();
 
