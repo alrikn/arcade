@@ -10,7 +10,7 @@
 
 Core::Core()
 {
-    printf("do smth");
+    //TODO: update the graphical path if the user selects smth
 }
 
 void Core::update_event()
@@ -29,9 +29,11 @@ void Core::run()
     printf("graphicalName: %s\n", graphical_module->getName().c_str());
     printf("gameName: %s\n", game_module->getName().c_str());
 
-    //this is line 24, and every mem leak comes from here.
+    //mem leak comes from here.
     game_module->load_display(graphical_module);
-    bool loaded_menu = false;
+    _menu_game.load_display(graphical_module);
+    _elapsed = _menu_game.get_elapsed();
+    bool loaded_menu = false; //we use this to track whether we've loaded the menu or not, so we don't keep reloading it every frame
 
     while (_running) {
         update_event();
@@ -39,11 +41,6 @@ void Core::run()
         if ((_lastEvent == QUIT || _lastEvent == MENU) && !_menu) {
             _menu = true;
             _lastEvent = OTHER; //we reset the last event to other so we don't immediately exit the menu again
-        }
-        if (_menu && !loaded_menu) {
-            _menu_game.load_display(graphical_module);
-            _elapsed = _menu_game.get_elapsed();
-            loaded_menu = true;
         }
         auto now = std::chrono::steady_clock::now();
         double elapsed = std::chrono::duration<double, std::milli>(now - _lastMoveTime).count();
@@ -70,14 +67,17 @@ void Core::menu_handle()
     _menu_game.tick(_lastEvent);
     auto [gameLibPath, graphLibPath] = _menu_game.get_path_chosen();
     if (gameLibPath != "" && graphLibPath != "") {
+        _menu = false; //the default is to set the menu to false, but we'll set it back to true if what the user has selected is a graphical lib
         if (gameLibPath != _currentGameLib)
             load_new_game(gameLibPath);
-        if (graphLibPath != _currentGraphicalLib)
+        if (graphLibPath != _currentGraphicalLib) {
             load_new_graphical(graphLibPath);
-        _menu = false; //we exit the menu and start the game
+            _menu = true; //if user has selected new graph, doesn't mean that he wants to play, just that hes sbrowsing what things look like
+        }
         _elapsed = game_module->get_elapsed(); //we update the elapsed time based on the new game's settings
     }
-
+    if (player_name.empty())
+        player_name = _menu_game.get_player_name();
 }
 
 void Core::load_new_game(std::string game_path)
