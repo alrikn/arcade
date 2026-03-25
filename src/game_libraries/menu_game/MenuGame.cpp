@@ -28,8 +28,7 @@ void MenuGame::loadLibs()
     if ((dir = opendir("./lib/game_lib")) != NULL) {
         while ((ent = readdir(dir)) != NULL) {
             std::string fileName = ent->d_name;
-            if (fileName.size() > 3 && fileName.substr(fileName.size() - 3) == ".so" &&
-                fileName.rfind("arcade_", 0) == 0) {
+            if (fileName.size() > 3 && fileName.substr(fileName.size() - 3) == ".so") {
                 _gameLibs.push_back(fileName);
             }
         }
@@ -40,8 +39,7 @@ void MenuGame::loadLibs()
     if ((dir = opendir("./lib/graphical_lib")) != NULL) {
         while ((ent = readdir(dir)) != NULL) {
             std::string fileName = ent->d_name;
-            if (fileName.size() > 3 && fileName.substr(fileName.size() - 3) == ".so" &&
-                fileName.rfind("arcade_", 0) == 0) {
+            if (fileName.size() > 3 && fileName.substr(fileName.size() - 3) == ".so") {
                 _graphicalLibs.push_back(fileName);
             }
         }
@@ -53,6 +51,7 @@ void MenuGame::load_display(IDisplayModule* display)
 {
     std::cout << "[" << _name << "] load_display called with display: " << display->getName() << std::endl;
     _display = display; //we store the display module so we can use it in the game logic
+    _display->init();
 
     _height = _display->getHeight();
     _width = _display->getWidth();
@@ -188,13 +187,10 @@ void MenuGame::tick(EventType input)
     if (input == S_KEY && global_index < maxIndex)
         global_index++;
     if (input == SPACE_KEY) {
-        if (global_index < (int)_gameLibs.size()) {
+        if (global_index < (int)_gameLibs.size())
             selected_game_index = global_index;
-            _gameSelectionPending = true;
-        } else {
+        else
             selected_graphical_index = global_index - _gameLibs.size();
-            _graphSelectionPending = true;
-        }
         selected_option = true;
     }
 
@@ -238,21 +234,13 @@ void MenuGame::tick(EventType input)
 
 std::tuple<std::string, std::string> MenuGame::get_path_chosen()
 {
-    if (!selected_option)
-        return {"", ""};
-
-    std::string gameLibPath = "";
-    std::string graphLibPath = "";
-
-    if (_gameSelectionPending)
-        gameLibPath = "./lib/game_lib/" + _gameLibs[selected_game_index];
-    if (_graphSelectionPending)
-        graphLibPath = "./lib/graphical_lib/" + _graphicalLibs[selected_graphical_index];
-
-    selected_option = false;
-    _gameSelectionPending = false;
-    _graphSelectionPending = false;
-    return {gameLibPath, graphLibPath};
+    if (selected_option) {
+        std::string gameLibPath = "./lib/game_lib/" + _gameLibs[selected_game_index];
+        std::string graphLibPath = "./lib/graphical_lib/" + _graphicalLibs[selected_graphical_index];
+        selected_option = false; //reset for next time we go to the menu
+        return {gameLibPath, graphLibPath};
+    }
+    return {"", ""}; //to signify that user has not selected shit
 }
 
 void MenuGame::exit()
