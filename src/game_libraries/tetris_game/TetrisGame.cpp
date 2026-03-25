@@ -81,8 +81,8 @@ TetrisGame::TetrisGame()
     _offsetX = (WIDTH - BOARD_WIDTH) / 2;
     _offsetY = (HEIGHT - BOARD_HEIGHT) / 2;
 
-    set_elapsed(50);
-    _lastFallTime = std::chrono::steady_clock::now();
+    // core handles pacing: each game tick advances gravity once
+    set_elapsed(250);
     initBoard();
     spawnPiece();
 }
