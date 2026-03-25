@@ -11,6 +11,7 @@
 #include <cstddef>
 #include <cstdlib>
 #include <iostream>
+#include <iterator>
 #include <string>
 #include <utility>
 #include <vector>
@@ -154,10 +155,13 @@ void Nibbler::tick(EventType input)
         _map[next_y][next_x] = CELL_EMPTY;
         _foodCount--;
         _score++;
-        std::cout << "Food left: " << _foodCount << std::endl;
     } else
         _snake.pop_back(); //we remove tail snake if we not eat food
 
+    if (_foodCount == 0) {
+        _levelWon = true;
+        return;
+    }
     _display->clear();
     for (int y = 0; y < HEIGHT; y++) {
         for (int x = 0; x < WIDTH; x++) {

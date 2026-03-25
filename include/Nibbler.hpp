@@ -14,7 +14,6 @@
 #include <string>
 #include "AGameModule.hpp"
 #include "IDisplayModule.hpp"
-#include "IGameModule.hpp"
 
 enum Direction {
     UP,
