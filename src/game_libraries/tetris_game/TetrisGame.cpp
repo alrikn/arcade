@@ -9,7 +9,6 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
-#include <chrono>
 
 // pieces and each rotation variaiton, to return a 2d matrix of 4x4
 const int TetrisGame::SHAPES[SHAPE_COUNT][ROTATION_COUNT][SHAPE_SIZE][SHAPE_SIZE] = {
