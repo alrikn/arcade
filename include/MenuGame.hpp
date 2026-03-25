@@ -41,6 +41,8 @@ class MenuGame : public AGameModule
 
         int selected_game_index = 0;
         int selected_graphical_index = 0;
+        bool _gameSelectionPending = false;
+        bool _graphSelectionPending = false;
     public:
         MenuGame();
         ~MenuGame() {write_highscore_file();}

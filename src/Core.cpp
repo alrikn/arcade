@@ -29,11 +29,11 @@ void Core::run()
     printf("graphicalName: %s\n", graphical_module->getName().c_str());
     printf("gameName: %s\n", game_module->getName().c_str());
 
+    graphical_module->init();
     //mem leak comes from here.
     game_module->load_display(graphical_module);
     _menu_game.load_display(graphical_module);
     _elapsed = _menu_game.get_elapsed();
-    graphical_module->init();
 
     while (_running) {
         update_event();
@@ -68,15 +68,17 @@ void Core::menu_handle()
     }
     _menu_game.tick(_lastEvent);
     auto [gameLibPath, graphLibPath] = _menu_game.get_path_chosen();
-    if (gameLibPath != "" && graphLibPath != "") {
-        _menu = false; //the default is to set the menu to false, but we'll set it back to true if what the user has selected is a graphical lib
-        if (gameLibPath != _currentGameLib)
-            load_new_game(gameLibPath);
-        if (graphLibPath != _currentGraphicalLib) {
-            load_new_graphical(graphLibPath);
-            _menu = true; //if user has selected new graph, doesn't mean that he wants to play, just that hes sbrowsing what things look like
+    if (gameLibPath != "" || graphLibPath != "") {
+        if (gameLibPath != "") {
+            _menu = false;
+            if (gameLibPath != _currentGameLib)
+                load_new_game(gameLibPath);
         }
-        _elapsed = game_module->get_elapsed(); //we update the elapsed time based on the new game's settings
+        if (graphLibPath != "" && graphLibPath != _currentGraphicalLib) {
+            load_new_graphical(graphLibPath);
+            _menu = true; // switching only graphics keeps user in menu preview mode
+        }
+        _elapsed = game_module->get_elapsed();
     }
     if (player_name.empty())
         player_name = _menu_game.get_player_name();
@@ -100,14 +102,13 @@ void Core::load_new_game(std::string game_path)
 
 void Core::load_new_graphical(std::string graphical_path)
 {
-    graphical_module->stop();
-    graphical_loader.reset(); //this causes a crash
+    graphical_loader.reset();
 
     graphical_loader.setHandle(graphical_path);
     graphical_module = graphical_loader.getInstance();
+    graphical_module->init();
     game_module->load_display(graphical_module);
     _menu_game.load_display(graphical_module); //we also need to reload the menu with the new graphical library, otherwise when we go back to the menu it will use the old graphical library which is now unloaded, and that will cause a crash when we try to draw with it.
 
     _currentGraphicalLib = graphical_path;
-    graphical_module->init();
 }
