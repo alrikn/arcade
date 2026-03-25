@@ -104,8 +104,12 @@ void TetrisGame::spawnPiece()
     _currentX = (BOARD_WIDTH / 2) - 2;
     _currentY = 0;
 
-    if (!canPlace(_currentShape, _currentRotation, _currentX, _currentY))
+    if (!canPlace(_currentShape, _currentRotation, _currentX, _currentY)) {
         _gameover = true;
+        if (get_score() > get_highscore())
+            set_highscore(get_score());
+    }
+}
 }
 
 bool TetrisGame::canPlace(int shape, int rotation, int x, int y) const
