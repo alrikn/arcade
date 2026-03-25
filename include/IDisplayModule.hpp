@@ -9,6 +9,7 @@
     #define INCLUDED_IDISPLAYMODULE_HPP
 
 
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -16,6 +17,7 @@ enum ShapeType {
     EMPTY = -1, //empty is a valid shape type.
     CIRCLE,
     SQUARE,
+    UNKNOWN, // fallback for sprites without a defined shape
 };
 
 enum EventType {
@@ -45,6 +47,16 @@ enum Color {
 const int HEIGHT = 40;
 const int WIDTH = 60;
 
+struct Sprite {
+    std::string path; // path relative to assets
+    uint8_t srcX = 0; // source rect X in pixels (offset)
+    uint8_t srcY = 0; // source rect Y in pixels (offset)
+    uint8_t srcW = 0; // source rect width in pixels
+    uint8_t srcH = 0; // source rect height in pixels
+    ShapeType fallback = UNKNOWN; // fallback shape for non-graphical libraries
+    Color fallbackColor = WHITE; // fallback color for non-graphical libraries
+};
+
 class IDisplayModule {
     public:
         virtual ~IDisplayModule() = default;
@@ -60,11 +72,12 @@ class IDisplayModule {
 
 
         //drawing functions (these are just examples, we can add more as needed)
-        virtual void drawText(const std::string& text, int x, int y) = 0; //draws text at the given position
+        virtual void drawText(const std::string& text, Color color, int x, int y) = 0; //draws text at the given position
 
         //we need to keep in mind that while sfml can take a sprite object, ncurses can only draw characters
         //we could have a simple sprite class that can be used by both libraries, and the drawSprite function can take care of the differences between the two libraries
         virtual void drawTile(ShapeType shape, Color color, int x, int y) = 0; //draws a space at the given position (for clearing)
+        virtual void drawSprite(const Sprite &sprite, int x, int y) = 0;
 
         //get width and height of display
         virtual int getWidth() = 0;

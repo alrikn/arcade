@@ -141,7 +141,7 @@ void SFML_lib::drawTile(ShapeType shape, Color color, int x, int y)
     }
 }
 
-void SFML_lib::drawText(const std::string &text, int x, int y)
+void SFML_lib::drawText(const std::string &text, Color color, int x, int y)
 {
     if (!_window.isOpen())
         return;
@@ -150,7 +150,7 @@ void SFML_lib::drawText(const std::string &text, int x, int y)
     sfText.setFont(_font);
     sfText.setString(text);
     sfText.setCharacterSize(18);
-    sfText.setFillColor(sf::Color::White);
+    sfText.setFillColor(toSfColor(color));
     sfText.setPosition(
         static_cast<float>(_originX + x * static_cast<int>(_tileSize)),
         static_cast<float>(_originY + y * static_cast<int>(_tileSize))
@@ -159,6 +159,51 @@ void SFML_lib::drawText(const std::string &text, int x, int y)
     _window.draw(sfText);
 }
 
+void SFML_lib::drawSprite(const Sprite &sprite, int x, int y)
+{
+    if (!_window.isOpen()) {
+        return;
+    }
+
+    const std::string fullPath = "assets/" + sprite.path;
+
+    if (_failedTextures.count(fullPath)) {
+        drawTile(sprite.fallback, sprite.fallbackColor, x, y);
+        return;
+    }
+
+    if (_textures.find(fullPath) == _textures.end()) {
+        sf::Texture &stored = _textures[fullPath];
+        if (!stored.loadFromFile(fullPath)) {
+            std::cerr << "Failed to load sprite: " << fullPath << std::endl;
+            _textures.erase(fullPath);
+            _failedTextures.insert(fullPath);
+            drawTile(sprite.fallback, sprite.fallbackColor, x, y);
+            return;
+        }
+    }
+
+    const sf::Texture &tex = _textures.at(fullPath);
+    sf::Sprite sfSprite(tex);
+
+    // If src is 0 it loads the full image
+    const float srcW = sprite.srcW > 0 ? sprite.srcW : static_cast<float>(tex.getSize().x);
+    const float srcH = sprite.srcH > 0 ? sprite.srcH : static_cast<float>(tex.getSize().y);
+
+    if (sprite.srcW > 0 && sprite.srcH > 0) {
+        sfSprite.setTextureRect(sf::IntRect(sprite.srcX, sprite.srcY, sprite.srcW, sprite.srcH));
+    }
+
+    sfSprite.setScale(
+        static_cast<float>(_tileSize) / srcW,
+        static_cast<float>(_tileSize) / srcH
+    );
+    sfSprite.setPosition(
+        static_cast<float>(_originX + x * static_cast<int>(_tileSize)),
+        static_cast<float>(_originY + y * static_cast<int>(_tileSize))
+    );
+    _window.draw(sfSprite);
+}
 
 //C interface (THIS is what dlopen/dlsym uses)
 extern "C" {
