@@ -168,10 +168,10 @@ void Nibbler::tick(EventType input)
                 _display->drawTile(SQUARE, WHITE, x, y);
         }
     }
-    drawSnake();
+    drawAssets();
 }
 
-void Nibbler::drawSnake()
+void Nibbler::drawAssets()
 {
     Sprite head;
     head.fallback = SQUARE; head.fallbackColor = GREEN;
