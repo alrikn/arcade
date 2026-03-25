@@ -153,7 +153,14 @@ void TetrisGame::moveCurrent(int dx, int dy)
     // if it cant move down, the piece is fixed to the board
     if (dy == 1) {
         lockCurrentPiece();
-        clearFullLines();
+        int linesCleared = clearFullLines();
+        if (linesCleared > 0) {
+            static const unsigned int lineScore[5] = {0, 100, 300, 500, 800};
+            unsigned int gained = lineScore[(linesCleared > 4) ? 4 : linesCleared];
+            set_score(get_score() + gained);
+            if (get_score() > get_highscore())
+                set_highscore(get_score());
+        }
         spawnPiece();
     }
 }
