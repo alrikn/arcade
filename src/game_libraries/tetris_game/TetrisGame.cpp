@@ -182,7 +182,7 @@ void TetrisGame::lockCurrentPiece()
             int bx = _currentX + col;
             int by = _currentY + row;
             if (bx >= 0 && bx < BOARD_WIDTH && by >= 0 && by < BOARD_HEIGHT)
-                _board[by][bx] = 1;
+                _board[by][bx] = _currentShape + 1;
         }
     }
 }
