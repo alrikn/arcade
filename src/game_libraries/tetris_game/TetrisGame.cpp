@@ -221,27 +221,22 @@ void TetrisGame::render()
 
     // draw border
     for (int x = -1; x <= BOARD_WIDTH; ++x) {
-        _display->drawText("-", WHITE, _offsetX + x, _offsetY - 1);
-        _display->drawText("-", WHITE, _offsetX + x, _offsetY + BOARD_HEIGHT);
+        _display->drawText("-", _offsetX + x, _offsetY - 1);
+        _display->drawText("-", _offsetX + x, _offsetY + BOARD_HEIGHT);
     }
-    _display->drawText("+", WHITE, _offsetX - 1, _offsetY - 1);
-    _display->drawText("+", WHITE, _offsetX + BOARD_WIDTH, _offsetY - 1);
-    _display->drawText("+", WHITE, _offsetX - 1, _offsetY + BOARD_HEIGHT);
-    _display->drawText("+", WHITE, _offsetX + BOARD_WIDTH, _offsetY + BOARD_HEIGHT);
+    _display->drawText("+", _offsetX - 1, _offsetY - 1);
+    _display->drawText("+", _offsetX + BOARD_WIDTH, _offsetY - 1);
+    _display->drawText("+", _offsetX - 1, _offsetY + BOARD_HEIGHT);
+    _display->drawText("+", _offsetX + BOARD_WIDTH, _offsetY + BOARD_HEIGHT);
     for (int y = 0; y < BOARD_HEIGHT; ++y) {
-        _display->drawText("|", WHITE, _offsetX - 1, _offsetY + y);
-        _display->drawText("|", WHITE, _offsetX + BOARD_WIDTH, _offsetY + y);
+        _display->drawText("|", _offsetX - 1, _offsetY + y);
+        _display->drawText("|", _offsetX + BOARD_WIDTH, _offsetY + y);
     }
 
     for (int y = 0; y < BOARD_HEIGHT; ++y) {
         for (int x = 0; x < BOARD_WIDTH; ++x) {
-            int cell = _board[y][x];
-            if (cell <= 0)
-                continue;
-            Color cellColor = WHITE;
-            if (cell <= SHAPE_COUNT)
-                cellColor = SHAPE_COLORS[cell - 1];
-            _display->drawTile(SQUARE, cellColor, _offsetX + x, _offsetY + y);
+            if (_board[y][x] != 0)
+                _display->drawText("#", _offsetX + x, _offsetY + y);
         }
     }
 
@@ -250,21 +245,14 @@ void TetrisGame::render()
             for (int col = 0; col < SHAPE_SIZE; ++col) {
                 if (SHAPES[_currentShape][_currentRotation][row][col] == 0)
                     continue;
-                _display->drawTile(SQUARE, SHAPE_COLORS[_currentShape], _offsetX + _currentX + col, _offsetY + _currentY + row);
+                _display->drawText("@", _offsetX + _currentX + col, _offsetY + _currentY + row);
             }
         }
     }
 
-    _display->drawText("TETRIS", WHITE, _offsetX, _offsetY + BOARD_HEIGHT + 1);
-    _display->drawText("A/D: move", WHITE, _offsetX, _offsetY + BOARD_HEIGHT + 2);
-    _display->drawText("W: rotate", WHITE, _offsetX, _offsetY + BOARD_HEIGHT + 3);
-    _display->drawText("S: hard drop", WHITE, _offsetX, _offsetY + BOARD_HEIGHT + 4);
-    _display->drawText("Score: " + std::to_string(get_score()), WHITE, _offsetX, _offsetY + BOARD_HEIGHT + 5);
-    _display->drawText("High: " + std::to_string(get_highscore()), WHITE, _offsetX, _offsetY + BOARD_HEIGHT + 6);
-    if (_gameover) {
-        _display->drawText("GAME OVER", RED, _offsetX + 1, _offsetY + (BOARD_HEIGHT / 2));
-        _display->drawText("SPACE: restart", WHITE, _offsetX, _offsetY + BOARD_HEIGHT + 7);
-    }
+    _display->drawText("tetris: left/right move, up rotate, down soft drop", _offsetX - 6, _offsetY + BOARD_HEIGHT + 1);
+    if (_gameover)
+        _display->drawText("GAME OVER", _offsetX + 1, _offsetY + (BOARD_HEIGHT / 2));
 }
 
 void TetrisGame::tick(EventType input)
