@@ -110,6 +110,13 @@ void TetrisGame::spawnPiece()
             set_highscore(get_score());
     }
 }
+
+void TetrisGame::resetGame()
+{
+    _gameover = false;
+    set_score(0);
+    initBoard();
+    spawnPiece();
 }
 
 bool TetrisGame::canPlace(int shape, int rotation, int x, int y) const
