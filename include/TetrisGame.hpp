@@ -53,6 +53,7 @@ class TetrisGame : public AGameModule
         void resetGame();
 
         static const int SHAPES[SHAPE_COUNT][ROTATION_COUNT][SHAPE_SIZE][SHAPE_SIZE];
+        static const Color SHAPE_COLORS[SHAPE_COUNT];
 };
 
 #endif
