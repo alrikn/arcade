@@ -9,10 +9,8 @@
     #define INCLUDED_TETRISGAME_HPP
 
 #include "AGameModule.hpp"
-#include <array>
 #include <vector>
 #include <string>
-#include <chrono>
 
 class TetrisGame : public AGameModule
 {
