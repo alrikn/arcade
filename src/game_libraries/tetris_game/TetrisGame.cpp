@@ -180,8 +180,10 @@ void TetrisGame::lockCurrentPiece()
     }
 }
 
-void TetrisGame::clearFullLines()
+int TetrisGame::clearFullLines()
 {
+    int cleared = 0;
+
     for (int y = BOARD_HEIGHT - 1; y >= 0; --y) {
         bool full = true;
         for (int x = 0; x < BOARD_WIDTH; ++x) {
@@ -196,8 +198,11 @@ void TetrisGame::clearFullLines()
 
         _board.erase(_board.begin() + y);
         _board.insert(_board.begin(), std::vector<int>(BOARD_WIDTH, 0));
+        cleared++;
         y++; // re check same line index after collapse bc maybe the line created is full
     }
+
+    return cleared;
 }
 
 void TetrisGame::render()
