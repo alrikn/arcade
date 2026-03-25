@@ -188,7 +188,7 @@ void Nibbler::drawAssets()
                 _display->drawSprite(wall, x, y);
             } else {
                 Sprite floor;
-                floor.fallback = SQUARE; floor.fallbackColor = WHITE;
+                floor.fallback = EMPTY; floor.fallbackColor = BLACK;
                 floor.path = "structure/floor.png";
                 _display->drawSprite(floor, x, y);
             }
