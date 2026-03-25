@@ -42,10 +42,6 @@ class TetrisGame : public AGameModule
         int _offsetX = 0;
         int _offsetY = 0;
 
-        // gravitu is now handled speratly
-        int _fallIntervalMs = 350;
-        std::chrono::steady_clock::time_point _lastFallTime;
-
         void initBoard();
         void spawnPiece();
         bool canPlace(int shape, int rotation, int x, int y) const;
