@@ -19,6 +19,7 @@ GRAPHICAL_DIRS = \
 
 GAME_DIRS = \
 	src/game_libraries/snake_game \
+	src/game_libraries/nibbler \
 
 SHARED_FLAGS = -shared -fPIC
 
