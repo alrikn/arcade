@@ -10,6 +10,7 @@
 #include "IGameModule.hpp"
 #include <cstddef>
 #include <cstdlib>
+#include <ctime>
 #include <iostream>
 #include <string>
 #include <utility>
@@ -60,6 +61,7 @@ static const char *MAZE[HEIGHT] = {
 
 Nibbler::Nibbler()
 {
+    srand(time(nullptr));
     std::cout << "[" << _name << "] Constructor called" << std::endl;
     this->set_elapsed(100);
     loadMap(rand() % 4);
