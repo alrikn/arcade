@@ -28,6 +28,8 @@ class SFML_lib : public ADisplayModule
         int _originY = 0;
 
         void updateLayout();
+        sf::Vector2f tileToPixel(int x, int y) const;
+        bool isInsideGameArea(int x, int y) const;
     public:
         SFML_lib();
         ~SFML_lib() = default;

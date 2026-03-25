@@ -23,6 +23,22 @@ static sf::Color toSfColor(Color color)
     }
 }
 
+bool SFML_lib::isInsideGameArea(int x, int y) const
+{
+    return x >= 0 && y >= 0
+        && x < static_cast<int>(_width)
+        && y < static_cast<int>(_height);
+}
+
+sf::Vector2f SFML_lib::tileToPixel(int x, int y) const
+{
+    return {
+        static_cast<float>(_originX + x * static_cast<int>(_tileSize)),
+        static_cast<float>(_originY + y * static_cast<int>(_tileSize))
+    };
+}
+
+
 
 SFML_lib::SFML_lib()
 {
