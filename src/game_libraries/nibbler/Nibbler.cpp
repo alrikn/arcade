@@ -173,6 +173,28 @@ void Nibbler::tick(EventType input)
 
 void Nibbler::drawAssets()
 {
+    // food
+    for (int y = 0; y < HEIGHT; y++) {
+        for (int x = 0; x < WIDTH; x++) {
+            if (_map[y][x] == CELL_FOOD) {
+                Sprite food;
+                food.fallback = CIRCLE; food.fallbackColor = RED;
+                food.path = "snake/apple.png";
+                _display->drawSprite(food, x, y);
+            } else if (_map[y][x] == CELL_WALL) {
+                Sprite wall;
+                wall.fallback = SQUARE; wall.fallbackColor = WHITE;
+                wall.path = "structure/wall.png";
+                _display->drawSprite(wall, x, y);
+            } else {
+                Sprite floor;
+                floor.fallback = SQUARE; floor.fallbackColor = WHITE;
+                floor.path = "structure/floor.png";
+                _display->drawSprite(floor, x, y);
+            }
+        }
+    }
+
     Sprite head;
     head.fallback = SQUARE; head.fallbackColor = GREEN;
     if (_currentDir == UP)    head.path = "snake/head_up.png";
@@ -188,18 +210,6 @@ void Nibbler::drawAssets()
         bool horizontal = (_snake[i].second == _snake[i - 1].second);
         body.path = horizontal ? "snake/body_horizontal.png" : "snake/body_vertical.png";
         _display->drawSprite(body, _snake[i].first, _snake[i].second);
-    }
-
-    // food
-    for (int y = 0; y < HEIGHT; y++) {
-        for (int x = 0; x < WIDTH; x++) {
-            if (_map[y][x] == CELL_FOOD) {
-                Sprite food;
-                food.fallback = CIRCLE; food.fallbackColor = RED;
-                food.path = "snake/apple.png";
-                _display->drawSprite(food, x, y);
-            }
-        }
     }
 }
 
