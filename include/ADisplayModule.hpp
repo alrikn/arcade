@@ -32,6 +32,11 @@ class ADisplayModule : public IDisplayModule
         {
             return '\0'; //by default, we return null character, which means no input
         }
+
+        virtual void drawSprite(const Sprite &sprite, int x, int y) override
+        {
+            drawTile(sprite.fallback, sprite.fallbackColor, x, y);
+        }
 };
 
 

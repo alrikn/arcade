@@ -13,7 +13,6 @@
 #include "IDisplayModule.hpp"
 #include "DLLoader.hpp"
 #include "IGameModule.hpp"
-#include "LibFoo.hpp"
 #include "MenuGame.hpp"
 
 

@@ -65,7 +65,7 @@ class AGameModule : public IGameModule
         void load_display(IDisplayModule* display) override
         {
             _display = display;
-            _display->init();
+            //_display->init(); //done in core
 
         }
 
