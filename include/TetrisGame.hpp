@@ -48,8 +48,9 @@ class TetrisGame : public AGameModule
         void moveCurrent(int dx, int dy);
         void rotateCurrentRight();
         void lockCurrentPiece();
-        void clearFullLines();
+        int clearFullLines();
         void render();
+        void resetGame();
 
         static const int SHAPES[SHAPE_COUNT][ROTATION_COUNT][SHAPE_SIZE][SHAPE_SIZE];
 };
