@@ -108,7 +108,7 @@ void SFML_lib::stop()
 
 void SFML_lib::clear()
 {
-     _window.clear(sf::Color::Black);
+    _window.clear(sf::Color::Black);
 }
 
 void SFML_lib::drawTile(ShapeType shape, Color color, int x, int y)
