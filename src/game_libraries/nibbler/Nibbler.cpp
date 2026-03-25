@@ -174,6 +174,26 @@ void Nibbler::tick(EventType input)
         _display->drawTile(SQUARE, GREEN, seg.first, seg.second);
 }
 
+void Nibbler::drawSnake()
+{
+    Sprite head;
+    head.fallback = SQUARE; head.fallbackColor = GREEN;
+    if (_currentDir == UP)    head.path = "sneak/head_up.png";
+    if (_currentDir == DOWN)  head.path = "snake/head_down.png";
+    if (_currentDir == LEFT)  head.path = "snake/head_left.png";
+    if (_currentDir == RIGHT) head.path = "snake/head_right.png";
+    _display->drawSprite(head, _snake[0].first, _snake[0].second);
+
+    // body
+    for (size_t i = 1; i < _snake.size(); i++) {
+        Sprite body;
+        body.fallback = SQUARE; body.fallbackColor = GREEN;
+        bool horizontal = (_snake[i].second == _snake[i - 1].second);
+        body.path = horizontal ? "snake/body_horizontal.png" : "snake/body_vertical.png";
+        _display->drawSprite(body, _snake[i].first, _snake[i].second);
+    }
+}
+
 void Nibbler::exit()
 {
     std::cout << "[" << _name << "] exit called" << std::endl;

@@ -49,6 +49,7 @@ class Nibbler : public AGameModule
 
         void loadMap(int rotation);
         void generateSnakeStart();
+        void drawSnake();
         bool checkCollision(int x, int y);
         void reset_game(EventType input);
         Direction tryAutoTurn(int x, int y, Direction);
