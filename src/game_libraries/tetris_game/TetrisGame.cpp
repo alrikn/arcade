@@ -63,6 +63,16 @@ const int TetrisGame::SHAPES[SHAPE_COUNT][ROTATION_COUNT][SHAPE_SIZE][SHAPE_SIZE
     }
 };
 
+const Color TetrisGame::SHAPE_COLORS[SHAPE_COUNT] = {
+    CYAN,
+    YELLOW,
+    MAGENTA,
+    GREEN,
+    RED,
+    BLUE,
+    WHITE
+};
+
 TetrisGame::TetrisGame()
 {
     std::cout << "[" << _name << "] constructor called" << std::endl;
