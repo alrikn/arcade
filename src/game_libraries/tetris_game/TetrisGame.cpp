@@ -251,26 +251,29 @@ void TetrisGame::render()
 void TetrisGame::tick(EventType input)
 {
     if (_gameover) {
+        if (input == SPACE_KEY)
+            resetGame();
         render();
         return;
     }
+
+    bool shouldApplyGravity = true;
 
     if (input == A_KEY)
         moveCurrent(-1, 0);
     else if (input == D_KEY)
         moveCurrent(1, 0);
-    else if (input == S_KEY)
-        moveCurrent(0, 1);
+    else if (input == S_KEY) {
+        while (canPlace(_currentShape, _currentRotation, _currentX, _currentY + 1))
+            _currentY++;
+        moveCurrent(0, 1); // lock + clear + spawn through existing path
+        shouldApplyGravity = false;
+    }
     else if (input == W_KEY)
         rotateCurrentRight();
 
-    // gravity now time based
-    auto now = std::chrono::steady_clock::now();
-    auto elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(now - _lastFallTime).count();
-    if (elapsedMs >= _fallIntervalMs) {
+    if (shouldApplyGravity)
         moveCurrent(0, 1);
-        _lastFallTime = now;
-    }
     render();
 }
 
