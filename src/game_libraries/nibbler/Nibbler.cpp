@@ -11,7 +11,6 @@
 #include <cstddef>
 #include <cstdlib>
 #include <iostream>
-#include <iterator>
 #include <string>
 #include <utility>
 #include <vector>
@@ -81,8 +80,8 @@ void Nibbler::tick(EventType input)
 
     if (_levelWon) {
         _display->clear();
-        _display->drawText("You Won! Press space to restart", WIDTH / 2 - 10, HEIGHT / 2);
-        _display->drawText("Score: " + std::to_string(_score), WIDTH / 2 - 10, HEIGHT / 2 + 1);
+        _display->drawText("You Won! Press space to restart", YELLOW,WIDTH / 2 - 10, HEIGHT / 2);
+        _display->drawText("Score: " + std::to_string(_score), WHITE,WIDTH / 2 - 10, HEIGHT / 2 + 1);
         if (input == SPACE_KEY) {
             _score = 0;
             _levelWon = false;
@@ -183,9 +182,9 @@ void Nibbler::exit()
 void Nibbler::reset_game(EventType input)
 {
     _display->clear();
-    _display->drawText("Game Over! Press SPACE to restart", WIDTH / 2 - 10, HEIGHT / 2);
-    _display->drawText("Score: " + std::to_string(_score), WIDTH / 2 - 10, HEIGHT / 2 + 1);
-    _display->drawText("High Score: " + std::to_string(_highscore), WIDTH / 2 - 10, HEIGHT / 2 + 2);
+    _display->drawText("Game Over! Press SPACE to restart", RED,WIDTH / 2 - 10, HEIGHT / 2);
+    _display->drawText("Score: " + std::to_string(_score), WHITE,WIDTH / 2 - 10, HEIGHT / 2 + 1);
+    _display->drawText("High Score: " + std::to_string(_highscore), WHITE, WIDTH / 2 - 10, HEIGHT / 2 + 2);
 
     _display->draw();
 
