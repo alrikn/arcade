@@ -63,7 +63,7 @@ Nibbler::Nibbler()
 {
     srand(time(nullptr));
     std::cout << "[" << _name << "] Constructor called" << std::endl;
-    this->set_elapsed(75);
+    this->set_elapsed(80);
     loadMap(rand() % 2);
     generateSnakeStart();
 }
@@ -158,6 +158,8 @@ void Nibbler::tick(EventType input)
         _map[next_y][next_x] = CELL_EMPTY;
         _foodCount--;
         _score++;
+        if (_elapsed > 40)
+            set_elapsed(_elapsed - 5);
     } else
         _snake.pop_back(); //we remove tail snake if we not eat food
 
