@@ -63,7 +63,7 @@ Nibbler::Nibbler()
 {
     srand(time(nullptr));
     std::cout << "[" << _name << "] Constructor called" << std::endl;
-    this->set_elapsed(90);
+    this->set_elapsed(75);
     loadMap(rand() % 2);
     generateSnakeStart();
 }
