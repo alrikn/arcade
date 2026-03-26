@@ -89,6 +89,7 @@ void Nibbler::tick(EventType input)
                 set_highscore(_score);
             _score = 0;
             _levelWon = false;
+            set_elapsed(80);
             loadMap(rand() % 2);
             generateSnakeStart();
         }
@@ -168,13 +169,9 @@ void Nibbler::tick(EventType input)
         return;
     }
     _display->clear();
-    //for (int y = 0; y < HEIGHT; y++) {
-    //    for (int x = 0; x < WIDTH; x++) {
-    //        if (_map[y][x] == CELL_WALL)
-    //            _display->drawTile(SQUARE, WHITE, x, y);
-    //    }
-    //}
     drawAssets();
+    _display->drawText("Score: " + std::to_string(_score), YELLOW, 0, 0);
+    _display->drawText("Food left: " + std::to_string(_foodCount), RED, 0, 1);
 }
 
 void Nibbler::drawAssets()
@@ -240,6 +237,7 @@ void Nibbler::reset_game(EventType input)
         _snake.clear();
         _gameover = false;
         _levelWon = false;
+        set_elapsed(80);
         loadMap(rand() % 2);
         generateSnakeStart();
     }
