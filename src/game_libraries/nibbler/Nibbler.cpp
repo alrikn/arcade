@@ -85,6 +85,8 @@ void Nibbler::tick(EventType input)
         _display->drawText("You Won! Press space to restart", YELLOW,WIDTH / 2 - 10, HEIGHT / 2);
         _display->drawText("Score: " + std::to_string(_score), WHITE,WIDTH / 2 - 10, HEIGHT / 2 + 1);
         if (input == SPACE_KEY) {
+            if (_score > _highscore)
+                set_highscore(_score);
             _score = 0;
             _levelWon = false;
             loadMap(rand() % 2);
