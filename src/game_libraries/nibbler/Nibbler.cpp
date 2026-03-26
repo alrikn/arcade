@@ -95,6 +95,14 @@ void Nibbler::tick(EventType input)
         }
         return;
     }
+    if (input == SPACE_KEY && !_gameover && !_levelWon)
+        _paused = !_paused;
+    if (_paused) {
+        _display->clear();
+        drawAssets();
+        _display->drawText("PAUSE | press SPACE to continue", YELLOW, WIDTH / 2 - 10, HEIGHT / 2);
+        return;
+    }
     if (input == W_KEY && _currentDir != DOWN)
         _nextDir = UP;
     if (input == A_KEY && _currentDir != RIGHT)

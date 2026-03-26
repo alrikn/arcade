@@ -39,6 +39,7 @@ class Nibbler : public AGameModule
         int _foodCount = 0;
         bool _levelWon = false;
         int _rotation = 0;
+        bool _paused = false;
     protected:
     public:
         Nibbler();
