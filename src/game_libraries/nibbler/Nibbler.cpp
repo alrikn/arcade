@@ -199,7 +199,7 @@ void Nibbler::drawAssets()
     }
 
     Sprite head;
-    head.fallback = SQUARE; head.fallbackColor = GREEN;
+    head.fallback = SQUARE; head.fallbackColor = CYAN;
     if (_currentDir == UP)    head.path = "snake/head_up.png";
     if (_currentDir == DOWN)  head.path = "snake/head_down.png";
     if (_currentDir == LEFT)  head.path = "snake/head_left.png";
