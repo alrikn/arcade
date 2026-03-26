@@ -63,8 +63,8 @@ Nibbler::Nibbler()
 {
     srand(time(nullptr));
     std::cout << "[" << _name << "] Constructor called" << std::endl;
-    this->set_elapsed(100);
-    loadMap(rand() % 4);
+    this->set_elapsed(90);
+    loadMap(rand() % 2);
     generateSnakeStart();
 }
 
@@ -87,7 +87,7 @@ void Nibbler::tick(EventType input)
         if (input == SPACE_KEY) {
             _score = 0;
             _levelWon = false;
-            loadMap(rand() % 4);
+            loadMap(rand() % 2);
             generateSnakeStart();
         }
         return;
@@ -164,12 +164,12 @@ void Nibbler::tick(EventType input)
         return;
     }
     _display->clear();
-    for (int y = 0; y < HEIGHT; y++) {
-        for (int x = 0; x < WIDTH; x++) {
-            if (_map[y][x] == CELL_WALL)
-                _display->drawTile(SQUARE, WHITE, x, y);
-        }
-    }
+    //for (int y = 0; y < HEIGHT; y++) {
+    //    for (int x = 0; x < WIDTH; x++) {
+    //        if (_map[y][x] == CELL_WALL)
+    //            _display->drawTile(SQUARE, WHITE, x, y);
+    //    }
+    //}
     drawAssets();
 }
 
@@ -236,22 +236,25 @@ void Nibbler::reset_game(EventType input)
         _snake.clear();
         _gameover = false;
         _levelWon = false;
-        loadMap(rand() % 4);
+        loadMap(rand() % 2);
         generateSnakeStart();
     }
 }
 
 void Nibbler::loadMap(int rotation)
 {
-    (void)rotation;
     char c;
+    _rotation = rotation;
 
     _map.clear();
     _map.resize(HEIGHT, std::vector<CellType>(WIDTH, CELL_EMPTY));
     _foodCount = 0;
     for (int y = 0; y < HEIGHT; y++) {
         for (int x = 0; x < WIDTH; x++) {
-            c = MAZE[y][x];
+            if (rotation == 1)
+                c = MAZE[HEIGHT - 1 - y][WIDTH - 1 - x];
+            else
+                c = MAZE[y][x];
             if (c == '#')
                 _map[y][x] = CELL_WALL;
             else if (c == 'o') {
@@ -266,14 +269,20 @@ void Nibbler::loadMap(int rotation)
 void Nibbler::generateSnakeStart()
 {
     _snake.clear();
-    // place snake at top-left of first corridor, going right
-    // head at (1,4), body going left: (1,3), (1,2), (1,1)
-    _snake.push_back({4, 1}); // head
-    _snake.push_back({3, 1});
-    _snake.push_back({2, 1});
-    _snake.push_back({1, 1}); // tail
-    _currentDir = RIGHT;
-    _nextDir = RIGHT;
+    if (_rotation == 0) {
+        _snake.push_back({4, 1}); // head
+        _snake.push_back({3, 1});
+        _snake.push_back({2, 1});
+        _snake.push_back({1, 1}); // tail
+        _currentDir = RIGHT;
+    } else {
+        _snake.push_back({WIDTH - 5, HEIGHT - 2}); // head
+        _snake.push_back({WIDTH - 4, HEIGHT - 2});
+        _snake.push_back({WIDTH - 3, HEIGHT - 2});
+        _snake.push_back({WIDTH - 2, HEIGHT - 2}); // tail
+        _currentDir = LEFT;
+    }
+    _nextDir = _currentDir;
 }
 
 bool Nibbler::checkCollision(int x, int y)
