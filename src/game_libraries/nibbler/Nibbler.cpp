@@ -64,7 +64,7 @@ Nibbler::Nibbler()
     srand(time(nullptr));
     std::cout << "[" << _name << "] Constructor called" << std::endl;
     this->set_elapsed(100);
-    loadMap(rand() % 4);
+    loadMap(rand() % 2);
     generateSnakeStart();
 }
 
@@ -85,11 +85,21 @@ void Nibbler::tick(EventType input)
         _display->drawText("You Won! Press space to restart", YELLOW,WIDTH / 2 - 10, HEIGHT / 2);
         _display->drawText("Score: " + std::to_string(_score), WHITE,WIDTH / 2 - 10, HEIGHT / 2 + 1);
         if (input == SPACE_KEY) {
+            if (_score > _highscore)
+                set_highscore(_score);
             _score = 0;
             _levelWon = false;
-            loadMap(rand() % 4);
+            loadMap(rand() % 2);
             generateSnakeStart();
         }
+        return;
+    }
+    if (input == SPACE_KEY && !_gameover && !_levelWon)
+        _paused = !_paused;
+    if (_paused) {
+        _display->clear();
+        drawAssets();
+        _display->drawText("PAUSE | press SPACE to continue", YELLOW, WIDTH / 2 - 10, HEIGHT / 2);
         return;
     }
     if (input == W_KEY && _currentDir != DOWN)
@@ -164,12 +174,6 @@ void Nibbler::tick(EventType input)
         return;
     }
     _display->clear();
-    for (int y = 0; y < HEIGHT; y++) {
-        for (int x = 0; x < WIDTH; x++) {
-            if (_map[y][x] == CELL_WALL)
-                _display->drawTile(SQUARE, WHITE, x, y);
-        }
-    }
     drawAssets();
 }
 
@@ -198,7 +202,7 @@ void Nibbler::drawAssets()
     }
 
     Sprite head;
-    head.fallback = SQUARE; head.fallbackColor = GREEN;
+    head.fallback = SQUARE; head.fallbackColor = CYAN;
     if (_currentDir == UP)    head.path = "snake/head_up.png";
     if (_currentDir == DOWN)  head.path = "snake/head_down.png";
     if (_currentDir == LEFT)  head.path = "snake/head_left.png";
@@ -236,22 +240,25 @@ void Nibbler::reset_game(EventType input)
         _snake.clear();
         _gameover = false;
         _levelWon = false;
-        loadMap(rand() % 4);
+        loadMap(rand() % 2);
         generateSnakeStart();
     }
 }
 
 void Nibbler::loadMap(int rotation)
 {
-    (void)rotation;
     char c;
+    _rotation = rotation;
 
     _map.clear();
     _map.resize(HEIGHT, std::vector<CellType>(WIDTH, CELL_EMPTY));
     _foodCount = 0;
     for (int y = 0; y < HEIGHT; y++) {
         for (int x = 0; x < WIDTH; x++) {
-            c = MAZE[y][x];
+            if (rotation == 1)
+                c = MAZE[HEIGHT - 1 - y][WIDTH - 1 - x];
+            else
+                c = MAZE[y][x];
             if (c == '#')
                 _map[y][x] = CELL_WALL;
             else if (c == 'o') {
@@ -266,14 +273,20 @@ void Nibbler::loadMap(int rotation)
 void Nibbler::generateSnakeStart()
 {
     _snake.clear();
-    // place snake at top-left of first corridor, going right
-    // head at (1,4), body going left: (1,3), (1,2), (1,1)
-    _snake.push_back({4, 1}); // head
-    _snake.push_back({3, 1});
-    _snake.push_back({2, 1});
-    _snake.push_back({1, 1}); // tail
-    _currentDir = RIGHT;
-    _nextDir = RIGHT;
+    if (_rotation == 0) {
+        _snake.push_back({4, 1}); // head
+        _snake.push_back({3, 1});
+        _snake.push_back({2, 1});
+        _snake.push_back({1, 1}); // tail
+        _currentDir = RIGHT;
+    } else {
+        _snake.push_back({WIDTH - 5, HEIGHT - 2}); // head
+        _snake.push_back({WIDTH - 4, HEIGHT - 2});
+        _snake.push_back({WIDTH - 3, HEIGHT - 2});
+        _snake.push_back({WIDTH - 2, HEIGHT - 2}); // tail
+        _currentDir = LEFT;
+    }
+    _nextDir = _currentDir;
 }
 
 bool Nibbler::checkCollision(int x, int y)

@@ -38,6 +38,8 @@ class Nibbler : public AGameModule
         std::vector<std::vector<CellType>> _map;
         int _foodCount = 0;
         bool _levelWon = false;
+        int _rotation = 0;
+        bool _paused = false;
     protected:
     public:
         Nibbler();
