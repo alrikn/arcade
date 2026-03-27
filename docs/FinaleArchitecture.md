@@ -1,5 +1,8 @@
 # here is the architecture we are sharing with the other group
 
+- group_1: alrik nico jad
+- group_2: jose, sofia, daniel
+
 
 the code of the Igame
 
