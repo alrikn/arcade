@@ -81,8 +81,7 @@ TetrisGame::TetrisGame()
     _offsetX = (WIDTH - BOARD_WIDTH) / 2;
     _offsetY = (HEIGHT - BOARD_HEIGHT) / 2;
 
-    // core handles pacing: each game tick advances gravity once
-    set_elapsed(250);
+    set_elapsed(INPUT_TICK_MS);
     initBoard();
     spawnPiece();
 }
@@ -103,6 +102,7 @@ void TetrisGame::spawnPiece()
     _currentRotation = 0;
     _currentX = (BOARD_WIDTH / 2) - 2;
     _currentY = 0;
+    _ticksSinceGravity = 0;
 
     if (!canPlace(_currentShape, _currentRotation, _currentX, _currentY)) {
         _gameover = true;
@@ -114,6 +114,7 @@ void TetrisGame::spawnPiece()
 void TetrisGame::resetGame()
 {
     _gameover = false;
+    _ticksSinceGravity = 0;
     set_score(0);
     initBoard();
     spawnPiece();
@@ -221,16 +222,12 @@ void TetrisGame::render()
 
     // draw border
     for (int x = -1; x <= BOARD_WIDTH; ++x) {
-        _display->drawText("-", WHITE, _offsetX + x, _offsetY - 1);
-        _display->drawText("-", WHITE, _offsetX + x, _offsetY + BOARD_HEIGHT);
+        _display->drawTile(SQUARE, BLUE, _offsetX + x, _offsetY - 1);
+        _display->drawTile(SQUARE, BLUE, _offsetX + x, _offsetY + BOARD_HEIGHT);
     }
-    _display->drawText("+", WHITE, _offsetX - 1, _offsetY - 1);
-    _display->drawText("+", WHITE, _offsetX + BOARD_WIDTH, _offsetY - 1);
-    _display->drawText("+", WHITE, _offsetX - 1, _offsetY + BOARD_HEIGHT);
-    _display->drawText("+", WHITE, _offsetX + BOARD_WIDTH, _offsetY + BOARD_HEIGHT);
-    for (int y = 0; y < BOARD_HEIGHT; ++y) {
-        _display->drawText("|", WHITE, _offsetX - 1, _offsetY + y);
-        _display->drawText("|", WHITE, _offsetX + BOARD_WIDTH, _offsetY + y);
+    for (int y = -1; y <= BOARD_HEIGHT; ++y) {
+        _display->drawTile(SQUARE, BLUE, _offsetX - 1, _offsetY + y);
+        _display->drawTile(SQUARE, BLUE, _offsetX + BOARD_WIDTH, _offsetY + y);
     }
 
     for (int y = 0; y < BOARD_HEIGHT; ++y) {
@@ -256,14 +253,13 @@ void TetrisGame::render()
     }
 
     _display->drawText("TETRIS", WHITE, _offsetX, _offsetY + BOARD_HEIGHT + 1);
-    _display->drawText("A/D: move", WHITE, _offsetX, _offsetY + BOARD_HEIGHT + 2);
-    _display->drawText("W: rotate", WHITE, _offsetX, _offsetY + BOARD_HEIGHT + 3);
-    _display->drawText("S: hard drop", WHITE, _offsetX, _offsetY + BOARD_HEIGHT + 4);
+    _display->drawText("Arrow Left/Right: move", WHITE, _offsetX, _offsetY + BOARD_HEIGHT + 2);
+    _display->drawText("Arrow Up: rotate right", WHITE, _offsetX, _offsetY + BOARD_HEIGHT + 3);
+    _display->drawText("Arrow Down: hard drop", WHITE, _offsetX, _offsetY + BOARD_HEIGHT + 4);
     _display->drawText("Score: " + std::to_string(get_score()), WHITE, _offsetX, _offsetY + BOARD_HEIGHT + 5);
-    _display->drawText("High: " + std::to_string(get_highscore()), WHITE, _offsetX, _offsetY + BOARD_HEIGHT + 6);
+    _display->drawText("High Score: " + std::to_string(get_highscore()), WHITE, _offsetX, _offsetY + BOARD_HEIGHT + 6);
     if (_gameover) {
         _display->drawText("GAME OVER", RED, _offsetX + 1, _offsetY + (BOARD_HEIGHT / 2));
-        _display->drawText("SPACE: restart", WHITE, _offsetX, _offsetY + BOARD_HEIGHT + 7);
     }
 }
 
@@ -276,7 +272,7 @@ void TetrisGame::tick(EventType input)
         return;
     }
 
-    bool shouldApplyGravity = true;
+    bool hardDropped = false;
 
     if (input == A_KEY)
         moveCurrent(-1, 0);
@@ -286,13 +282,19 @@ void TetrisGame::tick(EventType input)
         while (canPlace(_currentShape, _currentRotation, _currentX, _currentY + 1))
             _currentY++;
         moveCurrent(0, 1); // lock + clear + spawn through existing path
-        shouldApplyGravity = false;
+        hardDropped = true;
+        _ticksSinceGravity = 0;
     }
     else if (input == W_KEY)
         rotateCurrentRight();
 
-    if (shouldApplyGravity)
-        moveCurrent(0, 1);
+    if (!hardDropped) {
+        _ticksSinceGravity++;
+        if (_ticksSinceGravity >= GRAVITY_TICK_INTERVAL) {
+            moveCurrent(0, 1);
+            _ticksSinceGravity = 0;
+        }
+    }
     render();
 }
 

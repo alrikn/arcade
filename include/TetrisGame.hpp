@@ -42,6 +42,10 @@ class TetrisGame : public AGameModule
         int _offsetX = 0;
         int _offsetY = 0;
 
+        static const unsigned long INPUT_TICK_MS = 50;
+        static const int GRAVITY_TICK_INTERVAL = 5;
+        int _ticksSinceGravity = 0;
+
         void initBoard();
         void spawnPiece();
         bool canPlace(int shape, int rotation, int x, int y) const;
