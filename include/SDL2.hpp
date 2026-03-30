@@ -11,6 +11,7 @@
 #include "ADisplayModule.hpp"
 #include "IDisplayModule.hpp"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_pixels.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_video.h>
@@ -32,6 +33,9 @@ class SDL2 : public ADisplayModule
         unsigned int _tileSize = 20;
         int _originX = 0;
         int _originY = 0;
+
+        SDL_Color toSdlColor(Color color);
+        SDL_Texture *loadTexture(const std::string &path);
     protected:
     public:
         SDL2();
