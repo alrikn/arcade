@@ -221,6 +221,27 @@ void SFML_lib::drawSprite(const Sprite &sprite, int x, int y)
     _window.draw(sfSprite);
 }
 
+char SFML_lib::getInputChar()
+{
+    //we'll use sf::Event::TextEntered
+    sf::Event event;
+
+    while (_window.pollEvent(event)) {
+        if (event.type == sf::Event::TextEntered) {
+            if (event.text.unicode < 128 && event.text.unicode >= 32) {
+                return static_cast<char>(event.text.unicode);
+            }
+        }
+        if (event.type == sf::Event::KeyPressed) {
+            if (event.key.code == sf::Keyboard::Enter ||
+                event.key.code == sf::Keyboard::Escape) {
+                return '\n';
+            }
+        }
+    }
+    return '\0';
+}
+
 //C interface (THIS is what dlopen/dlsym uses)
 extern "C" {
 

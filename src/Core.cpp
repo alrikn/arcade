@@ -102,8 +102,11 @@ void Core::load_new_game(std::string game_path)
 
 void Core::load_new_graphical(std::string graphical_path)
 {
+    std::cout << "old path: " << _currentGraphicalLib << std::endl;
+    std::cout << "new path: " << graphical_path << std::endl;
+
     graphical_module->stop();
-    graphical_loader.reset(); //this causes a crash
+    graphical_loader.reset();
 
     graphical_loader.setHandle(graphical_path);
     graphical_module = graphical_loader.getInstance();
