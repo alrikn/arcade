@@ -8,9 +8,11 @@
 #include "Core.hpp"
 #include <cstdio>
 
-Core::Core()
+Core::Core(std::string graphical_lib) :
+    graphical_loader(graphical_lib),
+    game_loader(_currentGameLib)
 {
-    //TODO: update the graphical path if the user selects smth
+    _currentGraphicalLib = graphical_lib;
 }
 
 void Core::update_event()
@@ -26,7 +28,7 @@ void Core::run()
     graphical_module = graphical_loader.getInstance();
     game_module = game_loader.getInstance();
 
-    printf("graphicalName: %s\n", graphical_module->getName().c_str());
+    printf("graphicalName: %s\n", graphical_module->getName().c_str()); //crashes here (this is line 38)
     printf("gameName: %s\n", game_module->getName().c_str());
 
     //mem leak comes from here.
