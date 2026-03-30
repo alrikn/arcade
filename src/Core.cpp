@@ -10,7 +10,8 @@
 
 Core::Core(std::string graphical_lib) :
     graphical_loader(graphical_lib),
-    game_loader(_currentGameLib)
+    game_loader(_currentGameLib),
+    _menu_game(_currentGameLib, graphical_lib)
 {
     _currentGraphicalLib = graphical_lib;
 }

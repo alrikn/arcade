@@ -41,8 +41,11 @@ class MenuGame : public AGameModule
 
         int selected_game_index = 0;
         int selected_graphical_index = 0;
+
+        std::string currentcore_game_path = "";
+        std::string currentcore_graphical_path = "";
     public:
-        MenuGame();
+        MenuGame(std::string default_game_path, std::string default_graphical_path);
         ~MenuGame() {write_highscore_file();}
         std::tuple<std::string, std::string> get_path_chosen(); //game lib path, graph lib path
 
