@@ -7,20 +7,18 @@
 ** a loop to load each library, call the myEntryPoint functions, and close each library
 */
 
-#include <dlfcn.h>
-#include <stdio.h>
 #include "Core.hpp"
-#include "IDisplayModule.hpp"
-#include "DLLoader.hpp"
-#include "IGameModule.hpp"
-#include "MenuGame.hpp"
 
 
 
-int main(void)
+int main(int argc, char **argv)
 {
-    Core core;
-    core.run();
-
+    if (argc > 1) {
+        Core core((std::string(argv[1])));
+        core.run();
+    } else {
+        Core core;
+        core.run();
+    }
     return 0;
 }
