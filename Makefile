@@ -22,11 +22,10 @@ GAME_DIRS = \
 	src/game_libraries/tetris_game \
 	src/game_libraries/nibbler \
 
-SHARED_FLAGS = -shared -fPIC
 
 
 #where we put to all the libraries
-LIB_DIR = lib/game_lib lib/graphical_lib
+LIB_DIR = lib lib/game_lib lib/graphical_lib
 
 CC = clang++
 CFLAGS = -Wall -Wextra -g -Iinclude
@@ -39,19 +38,22 @@ $(NAME): $(OBJ)
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
-graphical:
+graphical: $(LIB_DIR)
 	@for dir in $(GRAPHICAL_DIRS); do \
 		$(MAKE) -C $$dir; \
 	done
+	@cp lib/graphical_lib/*.so lib/ 2>/dev/null || true
 
-#libs needs to execute graphical
-libs:
-	@for dir in $(GRAPHICAL_DIRS); do \
-		$(MAKE) -C $$dir; \
-	done
+game: $(LIB_DIR)
 	@for dir in $(GAME_DIRS); do \
 		$(MAKE) -C $$dir; \
 	done
+	@cp lib/game_lib/*.so lib/ 2>/dev/null || true
+
+#libs needs to execute graphical
+libs: $(LIB_DIR) graphical game
+	@echo "All libraries compiled and copied to lib/ root."
+
 
 $(LIB_DIR):
 	mkdir -p $(LIB_DIR)
@@ -73,6 +75,7 @@ fclean: clean
 	@for dir in $(GAME_DIRS); do \
 		$(MAKE) -C $$dir fclean; \
 	done
+	rm -f lib/*.so
 
 re: fclean all
 
