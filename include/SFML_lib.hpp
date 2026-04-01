@@ -23,6 +23,9 @@ class SFML_lib : public ADisplayModule
         std::map<std::string, sf::Texture> _textures;
         std::set<std::string> _failedTextures;
 
+
+        sf::RectangleShape _frameBorder;
+
         unsigned int _tileSize = 20;
         int _originX = 0;
         int _originY = 0;

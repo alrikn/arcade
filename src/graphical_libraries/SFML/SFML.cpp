@@ -38,7 +38,19 @@ sf::Vector2f SFML_lib::tileToPixel(int x, int y) const
     };
 }
 
+void SFML_lib::updateLayout()
+{
+    const sf::Vector2u winSize = _window.getSize();
+    const int boxW = static_cast<int>(_width * _tileSize);
+    const int boxH = static_cast<int>(_height * _tileSize);
 
+    _originX = (static_cast<int>(winSize.x) - boxW) / 2;
+    _originY = (static_cast<int>(winSize.y) - boxH) / 2;
+
+    _frameBorder.setPosition(static_cast<float>(_originX), static_cast<float>(_originY));
+    _frameBorder.setSize(sf::Vector2f(static_cast<float>(boxW), static_cast<float>(boxH)));
+
+}
 
 SFML_lib::SFML_lib()
 {
@@ -60,12 +72,21 @@ void SFML_lib::init()
     if (!_font.loadFromFile("assets/Xolonium-Regular.ttf")) {
         std::cerr << "Failed to load font" << std::endl;
     }
+
+
+    _frameBorder.setFillColor(sf::Color::Transparent);
+    _frameBorder.setOutlineThickness(3.f);
+    _frameBorder.setOutlineColor(sf::Color(255, 255, 255, 180));
+
+    updateLayout(); //we only do it once at the start, because SFML automatically maintains the aspect ratio of the window
+    // so we don't need to update the layout on resize
 }
 
 void SFML_lib::draw()
 {
     if (!_window.isOpen())
         return;
+    _window.draw(_frameBorder);
     _window.display();
 }
 
