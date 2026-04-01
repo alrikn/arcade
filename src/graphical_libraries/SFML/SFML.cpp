@@ -53,16 +53,6 @@ void SFML_lib::updateLayout()
     _frameBorder.setPosition(static_cast<float>(_originX), static_cast<float>(_originY));
     _frameBorder.setSize(sf::Vector2f(static_cast<float>(boxW), static_cast<float>(boxH)));
 
-    if (_hasBackground) {
-        const sf::Vector2u texSize = _backgroundTexture.getSize();
-        if (texSize.x != 0 && texSize.y != 0) {
-            _backgroundSprite.setPosition(0.f, 0.f);
-            _backgroundSprite.setScale(
-                static_cast<float>(winSize.x) / static_cast<float>(texSize.x),
-                static_cast<float>(winSize.y) / static_cast<float>(texSize.y)
-            );
-        }
-    }
 }
 
 SFML_lib::SFML_lib()
@@ -84,14 +74,6 @@ void SFML_lib::init()
 
     if (!_font.loadFromFile("assets/Xolonium-Regular.ttf")) {
         std::cerr << "Failed to load font" << std::endl;
-    }
-
-    _hasBackground = _backgroundTexture.loadFromFile(_backgroundPath);
-    if (_hasBackground) {
-        _backgroundTexture.setSmooth(true);
-        _backgroundSprite.setTexture(_backgroundTexture, true);
-    } else {
-        std::cerr << "Failed to load background: " << _backgroundPath << std::endl;
     }
 
     _gameBoxFill.setFillColor(sf::Color::Black);

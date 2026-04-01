@@ -27,11 +27,6 @@ class SFML_lib : public ADisplayModule
         sf::RectangleShape _gameBoxFill;
         sf::RectangleShape _frameBorder;
 
-        sf::Texture _backgroundTexture;
-        sf::Sprite _backgroundSprite;
-        bool _hasBackground = false;
-        std::string _backgroundPath = "assets/background.png"; //we will have to update this
-
         unsigned int _tileSize = 20;
         int _originX = 0;
         int _originY = 0;
