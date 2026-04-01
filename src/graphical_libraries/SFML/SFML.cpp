@@ -47,9 +47,6 @@ void SFML_lib::updateLayout()
     _originX = (static_cast<int>(winSize.x) - boxW) / 2;
     _originY = (static_cast<int>(winSize.y) - boxH) / 2;
 
-    _gameBoxFill.setPosition(static_cast<float>(_originX), static_cast<float>(_originY));
-    _gameBoxFill.setSize(sf::Vector2f(static_cast<float>(boxW), static_cast<float>(boxH)));
-
     _frameBorder.setPosition(static_cast<float>(_originX), static_cast<float>(_originY));
     _frameBorder.setSize(sf::Vector2f(static_cast<float>(boxW), static_cast<float>(boxH)));
 
@@ -76,13 +73,13 @@ void SFML_lib::init()
         std::cerr << "Failed to load font" << std::endl;
     }
 
-    _gameBoxFill.setFillColor(sf::Color::Black);
 
     _frameBorder.setFillColor(sf::Color::Transparent);
     _frameBorder.setOutlineThickness(3.f);
     _frameBorder.setOutlineColor(sf::Color(255, 255, 255, 180));
 
-    updateLayout();
+    updateLayout(); //we only do it once at the start, because SFML automatically maintains the aspect ratio of the window
+    // so we don't need to update the layout on resize
 }
 
 void SFML_lib::draw()
@@ -98,6 +95,9 @@ EventType SFML_lib::pollEvents()
    sf::Event event;
 
     while (_window.pollEvent(event)) {
+        //if (event.type == sf::Event::Resized) {
+        //    updateLayout();
+        //}
         if (event.type == sf::Event::Closed)
             return QUIT;
 

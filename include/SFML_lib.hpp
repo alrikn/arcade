@@ -24,7 +24,6 @@ class SFML_lib : public ADisplayModule
         std::set<std::string> _failedTextures;
 
 
-        sf::RectangleShape _gameBoxFill;
         sf::RectangleShape _frameBorder;
 
         unsigned int _tileSize = 20;
