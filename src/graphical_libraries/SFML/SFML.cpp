@@ -95,9 +95,6 @@ EventType SFML_lib::pollEvents()
    sf::Event event;
 
     while (_window.pollEvent(event)) {
-        //if (event.type == sf::Event::Resized) {
-        //    updateLayout();
-        //}
         if (event.type == sf::Event::Closed)
             return QUIT;
 
