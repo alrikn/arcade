@@ -30,13 +30,17 @@ LIB_DIR = lib lib/game_lib lib/graphical_lib
 CC = clang++
 CFLAGS = -Wall -Wextra -g -Iinclude
 
-all: $(NAME) libs
+all: core libs
 
 $(NAME): $(OBJ)
 	$(CC) $(OBJ) -o $(NAME)
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
+
+# the things that are not libraries need to be compile with the core command
+core: $(OBJ)
+	$(CC) $(OBJ) -o $(NAME)
 
 graphical: $(LIB_DIR)
 	@for dir in $(GRAPHICAL_DIRS); do \
