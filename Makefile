@@ -42,20 +42,20 @@ $(NAME): $(OBJ)
 core: $(OBJ)
 	$(CC) $(OBJ) -o $(NAME)
 
-graphical: $(LIB_DIR)
+graphicals: $(LIB_DIR)
 	@for dir in $(GRAPHICAL_DIRS); do \
 		$(MAKE) -C $$dir; \
 	done
 	@cp lib/graphical_lib/*.so lib/ 2>/dev/null || true
 
-game: $(LIB_DIR)
+games: $(LIB_DIR)
 	@for dir in $(GAME_DIRS); do \
 		$(MAKE) -C $$dir; \
 	done
 	@cp lib/game_lib/*.so lib/ 2>/dev/null || true
 
 #libs needs to execute graphical
-libs: $(LIB_DIR) graphical game
+libs: $(LIB_DIR) graphicals games
 	@echo "All libraries compiled and copied to lib/ root."
 
 
