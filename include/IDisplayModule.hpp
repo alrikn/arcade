@@ -22,6 +22,10 @@ enum ShapeType {
 
 enum EventType {
     OTHER = -1, //we will return other, but we won't tell you what it is
+    NUM_1 = 1,
+    NUM_2 = 2,
+    NUM_3 = 3,
+    NUM_4 = 4,
     W_KEY, //also is the arrow up key
     A_KEY, //also is the arrow left key
     S_KEY, //also is the arrow down key
@@ -31,8 +35,6 @@ enum EventType {
     MOUSE_R,
     MENU, //so that the core can detect when we want to go to the menu
     ENTER,
-    NUM_1,
-    NUM_2,
     QUIT,
 };
 

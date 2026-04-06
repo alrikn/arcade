@@ -25,12 +25,19 @@ void Core::update_event()
         _lastEvent = event;
 }
 
-void Core::go_next_game(EventType event)
+void Core::go_next_lib(EventType event)
 {
-    bool previous = (event == NUM_1);
+    if (event == NUM_1 || event == NUM_2) {
+        bool previous = (event == NUM_1);
+        std::string nextGameLib = _menu_game.get_next_game(previous);
+        load_new_game(nextGameLib);
+    }
+    if (event == NUM_3 || event == NUM_4) {
+        bool previous = (event == NUM_3);
 
-    std::string nextGameLib = _menu_game.get_next_game(previous);
-    load_new_game(nextGameLib);
+        std::string nextGraphLib = _menu_game.get_next_graphical(previous);
+        load_new_graphical(nextGraphLib);
+    }
     _lastEvent = OTHER; //we reset the last event to other so we don't immediately repeat the same event again
 }
 
@@ -57,8 +64,8 @@ void Core::run()
             _elapsed = _menu_game.get_elapsed();
             _lastEvent = OTHER; //we reset the last event to other so we don't immediately exit the menu again
         }
-        if (_lastEvent == NUM_1 || _lastEvent == NUM_2) {
-            go_next_game(_lastEvent);
+        if (_lastEvent == NUM_1 || _lastEvent == NUM_2 || _lastEvent == NUM_3 || _lastEvent == NUM_4) {
+            go_next_lib(_lastEvent);
             continue;
         }
         auto now = std::chrono::steady_clock::now();

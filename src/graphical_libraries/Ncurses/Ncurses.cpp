@@ -130,6 +130,10 @@ EventType Ncurses::pollEvents()
             return NUM_1;
         case '2':
             return NUM_2;
+        case '3':
+            return NUM_3;
+        case '4':
+            return NUM_4;
         default:
             return OTHER;
     }

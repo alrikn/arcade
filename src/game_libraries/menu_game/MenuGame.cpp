@@ -270,6 +270,18 @@ std::string MenuGame::get_next_game(bool previous)
     return "./lib/game_lib/" + _gameLibs[index];
 }
 
+std::string MenuGame::get_next_graphical(bool previous)
+{
+    int index = selected_graphical_index;
+    if (previous) {
+        index = (index - 1 + _graphicalLibs.size()) % _graphicalLibs.size();
+    } else {
+        index = (index + 1) % _graphicalLibs.size();
+    }
+    selected_graphical_index = index;
+    return "./lib/graphical_lib/" + _graphicalLibs[index];
+}
+
 void MenuGame::exit()
 {
     std::cout << "[" << _name << "] exit called" << std::endl;
