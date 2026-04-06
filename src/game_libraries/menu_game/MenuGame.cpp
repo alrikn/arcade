@@ -258,6 +258,30 @@ std::tuple<std::string, std::string> MenuGame::get_path_chosen()
     return {"", ""}; //to signify that user has not selected shit
 }
 
+std::string MenuGame::get_next_game(bool previous)
+{
+    int index = selected_game_index;
+    if (previous) {
+        index = (index - 1 + _gameLibs.size()) % _gameLibs.size();
+    } else {
+        index = (index + 1) % _gameLibs.size();
+    }
+    selected_game_index = index;
+    return "./lib/game_lib/" + _gameLibs[index];
+}
+
+std::string MenuGame::get_next_graphical(bool previous)
+{
+    int index = selected_graphical_index;
+    if (previous) {
+        index = (index - 1 + _graphicalLibs.size()) % _graphicalLibs.size();
+    } else {
+        index = (index + 1) % _graphicalLibs.size();
+    }
+    selected_graphical_index = index;
+    return "./lib/graphical_lib/" + _graphicalLibs[index];
+}
+
 void MenuGame::exit()
 {
     std::cout << "[" << _name << "] exit called" << std::endl;

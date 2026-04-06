@@ -12,6 +12,8 @@
 ## Menu
 - [x] display the high score for each game in the menu
 - [x] add a "high scores" section in the menu that displays the high scores for each game.
+- [x] the menu should be able to switch games when 1 or 2 is being pressed.
+- [x] the menu should be able to switch graphical libraries when 3 or 4 is being pressed.
 
 ## Games
 

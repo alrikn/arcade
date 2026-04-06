@@ -51,6 +51,8 @@ class Core
 
         void update_event();
 
+        void go_next_lib(EventType event);
+
 };
 
 

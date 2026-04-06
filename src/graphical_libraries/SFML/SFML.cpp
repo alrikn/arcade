@@ -119,6 +119,16 @@ EventType SFML_lib::pollEvents()
                     return QUIT;
                 case sf::Keyboard::M:
                     return MENU;
+                case sf::Keyboard::Enter:
+                    return ENTER;
+                case sf::Keyboard::Num1:
+                    return NUM_1;
+                case sf::Keyboard::Num2:
+                    return NUM_2;
+                case sf::Keyboard::Num3:
+                    return NUM_3;
+                case sf::Keyboard::Num4:
+                    return NUM_4;
                 default:
                     break;
             }
