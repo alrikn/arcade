@@ -121,10 +121,10 @@ EventType SFML_lib::pollEvents()
                     return MENU;
                 case sf::Keyboard::Enter:
                     return ENTER;
-                case sf::Keyboard::F1:
-                    return F1;
-                case sf::Keyboard::F2:
-                    return F2;
+                case sf::Keyboard::Num1:
+                    return NUM_1;
+                case sf::Keyboard::Num2:
+                    return NUM_2;
                 default:
                     break;
             }

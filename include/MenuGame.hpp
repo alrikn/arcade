@@ -72,6 +72,8 @@ class MenuGame : public AGameModule
         void drawBox(int startX, int startY, int width, int height);
 
         void displayHighscores(int startX, int startY);
+
+        std::string get_next_game(bool previous);
 };
 
 #endif

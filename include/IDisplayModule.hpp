@@ -31,8 +31,8 @@ enum EventType {
     MOUSE_R,
     MENU, //so that the core can detect when we want to go to the menu
     ENTER,
-    F1,
-    F2,
+    NUM_1,
+    NUM_2,
     QUIT,
 };
 

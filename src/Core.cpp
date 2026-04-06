@@ -6,6 +6,7 @@
 */
 
 #include "Core.hpp"
+#include "IDisplayModule.hpp"
 #include <cstdio>
 
 Core::Core(std::string graphical_lib) :
@@ -22,6 +23,15 @@ void Core::update_event()
 
     if (event != OTHER)
         _lastEvent = event;
+}
+
+void Core::go_next_game(EventType event)
+{
+    bool previous = (event == NUM_1);
+
+    std::string nextGameLib = _menu_game.get_next_game(previous);
+    load_new_game(nextGameLib);
+    _lastEvent = OTHER; //we reset the last event to other so we don't immediately repeat the same event again
 }
 
 void Core::run()
@@ -46,6 +56,10 @@ void Core::run()
             _menu_game.update_highscore(game_module->getName(), game_module->get_highscore());
             _elapsed = _menu_game.get_elapsed();
             _lastEvent = OTHER; //we reset the last event to other so we don't immediately exit the menu again
+        }
+        if (_lastEvent == NUM_1 || _lastEvent == NUM_2) {
+            go_next_game(_lastEvent);
+            continue;
         }
         auto now = std::chrono::steady_clock::now();
         double elapsed = std::chrono::duration<double, std::milli>(now - _lastMoveTime).count();

@@ -12,6 +12,7 @@
 ## Menu
 - [x] display the high score for each game in the menu
 - [x] add a "high scores" section in the menu that displays the high scores for each game.
+- [ ] the menu should be able to swith games when f1 or f2 is being pressed.
 
 ## Games
 

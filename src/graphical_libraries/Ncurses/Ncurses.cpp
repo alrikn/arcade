@@ -126,10 +126,10 @@ EventType Ncurses::pollEvents()
             return MENU;
         case '\n':
             return ENTER;
-        case KEY_F(1):
-            return F1;
-        case KEY_F(2):
-            return F2;
+        case '1':
+            return NUM_1;
+        case '2':
+            return NUM_2;
         default:
             return OTHER;
     }
