@@ -39,6 +39,7 @@ void Core::go_next_lib(EventType event)
         load_new_graphical(nextGraphLib);
     }
     _lastEvent = OTHER; //we reset the last event to other so we don't immediately repeat the same event again
+    _elapsed = game_module->get_elapsed(); //we update the elapsed time based on the new game's settings
 }
 
 void Core::run()
