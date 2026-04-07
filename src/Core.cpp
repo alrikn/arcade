@@ -6,11 +6,15 @@
 */
 
 #include "Core.hpp"
+#include "IDisplayModule.hpp"
 #include <cstdio>
 
-Core::Core()
+Core::Core(std::string graphical_lib) :
+    graphical_loader(graphical_lib),
+    game_loader(_currentGameLib),
+    _menu_game(_currentGameLib, graphical_lib)
 {
-    //TODO: update the graphical path if the user selects smth
+    _currentGraphicalLib = graphical_lib;
 }
 
 void Core::update_event()
@@ -21,12 +25,29 @@ void Core::update_event()
         _lastEvent = event;
 }
 
+void Core::go_next_lib(EventType event)
+{
+    if (event == NUM_1 || event == NUM_2) {
+        bool previous = (event == NUM_1);
+        std::string nextGameLib = _menu_game.get_next_game(previous);
+        load_new_game(nextGameLib);
+    }
+    if (event == NUM_3 || event == NUM_4) {
+        bool previous = (event == NUM_3);
+
+        std::string nextGraphLib = _menu_game.get_next_graphical(previous);
+        load_new_graphical(nextGraphLib);
+    }
+    _lastEvent = OTHER; //we reset the last event to other so we don't immediately repeat the same event again
+    _elapsed = game_module->get_elapsed(); //we update the elapsed time based on the new game's settings
+}
+
 void Core::run()
 {
     graphical_module = graphical_loader.getInstance();
     game_module = game_loader.getInstance();
 
-    printf("graphicalName: %s\n", graphical_module->getName().c_str());
+    printf("graphicalName: %s\n", graphical_module->getName().c_str()); //crashes here (this is line 38)
     printf("gameName: %s\n", game_module->getName().c_str());
 
     //mem leak comes from here.
@@ -43,6 +64,10 @@ void Core::run()
             _menu_game.update_highscore(game_module->getName(), game_module->get_highscore());
             _elapsed = _menu_game.get_elapsed();
             _lastEvent = OTHER; //we reset the last event to other so we don't immediately exit the menu again
+        }
+        if (_lastEvent == NUM_1 || _lastEvent == NUM_2 || _lastEvent == NUM_3 || _lastEvent == NUM_4) {
+            go_next_lib(_lastEvent);
+            continue;
         }
         auto now = std::chrono::steady_clock::now();
         double elapsed = std::chrono::duration<double, std::milli>(now - _lastMoveTime).count();
@@ -100,8 +125,11 @@ void Core::load_new_game(std::string game_path)
 
 void Core::load_new_graphical(std::string graphical_path)
 {
+    std::cout << "old path: " << _currentGraphicalLib << std::endl;
+    std::cout << "new path: " << graphical_path << std::endl;
+
     graphical_module->stop();
-    graphical_loader.reset(); //this causes a crash
+    graphical_loader.reset();
 
     graphical_loader.setHandle(graphical_path);
     graphical_module = graphical_loader.getInstance();

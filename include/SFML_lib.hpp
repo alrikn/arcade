@@ -23,11 +23,16 @@ class SFML_lib : public ADisplayModule
         std::map<std::string, sf::Texture> _textures;
         std::set<std::string> _failedTextures;
 
+
+        sf::RectangleShape _frameBorder;
+
         unsigned int _tileSize = 20;
         int _originX = 0;
         int _originY = 0;
 
         void updateLayout();
+        sf::Vector2f tileToPixel(int x, int y) const;
+        bool isInsideGameArea(int x, int y) const;
     public:
         SFML_lib();
         ~SFML_lib() = default;
@@ -43,6 +48,7 @@ class SFML_lib : public ADisplayModule
         void drawTile(ShapeType shape, Color color, int x, int y) override;
         void drawText(const std::string &text, Color color, int x, int y) override;
         void drawSprite(const Sprite &sprite, int x, int y) override;
+        char getInputChar() override;
 
 };
 

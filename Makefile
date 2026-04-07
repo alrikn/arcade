@@ -30,7 +30,7 @@ LIB_DIR = lib lib/game_lib lib/graphical_lib
 CC = clang++
 CFLAGS = -Wall -Wextra -g -Iinclude
 
-all: $(NAME) libs
+all: core libs
 
 $(NAME): $(OBJ)
 	$(CC) $(OBJ) -o $(NAME)
@@ -38,20 +38,24 @@ $(NAME): $(OBJ)
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
-graphical: $(LIB_DIR)
+# the things that are not libraries need to be compile with the core command
+core: $(OBJ)
+	$(CC) $(OBJ) -o $(NAME)
+
+graphicals: $(LIB_DIR)
 	@for dir in $(GRAPHICAL_DIRS); do \
 		$(MAKE) -C $$dir; \
 	done
 	@cp lib/graphical_lib/*.so lib/ 2>/dev/null || true
 
-game: $(LIB_DIR)
+games: $(LIB_DIR)
 	@for dir in $(GAME_DIRS); do \
 		$(MAKE) -C $$dir; \
 	done
 	@cp lib/game_lib/*.so lib/ 2>/dev/null || true
 
 #libs needs to execute graphical
-libs: $(LIB_DIR) graphical game
+libs: $(LIB_DIR) graphicals games
 	@echo "All libraries compiled and copied to lib/ root."
 
 

@@ -23,8 +23,8 @@ class Core
         std::string _currentGraphicalLib = "./lib/graphical_lib/arcade_ncurses.so";
         bool _menu = true; //we start in the menu, so we set this to true
 
-        DLLoader<IDisplayModule> graphical_loader = DLLoader<IDisplayModule>(_currentGraphicalLib);
-        DLLoader<IGameModule> game_loader = DLLoader<IGameModule>(_currentGameLib);
+        DLLoader<IDisplayModule> graphical_loader;
+        DLLoader<IGameModule> game_loader;
 
         IDisplayModule* graphical_module;
         IGameModule* game_module;
@@ -38,7 +38,7 @@ class Core
         std::string player_name;
     public:
         bool _running = true;
-        Core();
+        Core(std::string graphical_lib = "./lib/graphical_lib/arcade_ncurses.so");
         ~Core() = default;
 
         void run(); //this will be the main loop of the program, it will handle loading the libraries, calling the game and display functions, and handling the menu logic
@@ -50,6 +50,8 @@ class Core
         void load_new_graphical(std::string graphical_path);
 
         void update_event();
+
+        void go_next_lib(EventType event);
 
 };
 

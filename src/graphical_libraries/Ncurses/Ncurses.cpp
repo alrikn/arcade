@@ -122,6 +122,18 @@ EventType Ncurses::pollEvents()
         case 'q': //we also need to take in esc
         case 27: //esc key
             return QUIT;
+        case 'm':
+            return MENU;
+        case '\n':
+            return ENTER;
+        case '1':
+            return NUM_1;
+        case '2':
+            return NUM_2;
+        case '3':
+            return NUM_3;
+        case '4':
+            return NUM_4;
         default:
             return OTHER;
     }

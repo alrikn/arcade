@@ -9,10 +9,25 @@
 #include "IDisplayModule.hpp"
 #include<dirent.h>
 
-MenuGame::MenuGame()
+MenuGame::MenuGame(std::string default_game_path, std::string default_graphical_path)
 {
     std::cout << "[" << _name << "] Constructor called" << std::endl;
     loadLibs();
+    currentcore_game_path = default_game_path;
+    currentcore_graphical_path = default_graphical_path;
+    //now we check the index of the degault paths in the _gameLibs and _graphicalLibs vectors, and we set the current_game_index and current_graphical_index to those indexes, so that when we enter the menu, the default options are already selected
+    for (size_t i = 0; i < _gameLibs.size(); i++) {
+        if (_gameLibs[i] == default_game_path.substr(default_game_path.find_last_of("/\\") + 1)) {
+            selected_game_index = i;
+            break;
+        }
+    }
+    for (size_t i = 0; i < _graphicalLibs.size(); i++) {
+        if (_graphicalLibs[i] == default_graphical_path.substr(default_graphical_path.find_last_of("/\\") + 1)) {
+            selected_graphical_index = i;
+            break;
+        }
+    }
 }
 
 const std::string &MenuGame::getName() const
@@ -243,12 +258,36 @@ std::tuple<std::string, std::string> MenuGame::get_path_chosen()
     return {"", ""}; //to signify that user has not selected shit
 }
 
+std::string MenuGame::get_next_game(bool previous)
+{
+    int index = selected_game_index;
+    if (previous) {
+        index = (index - 1 + _gameLibs.size()) % _gameLibs.size();
+    } else {
+        index = (index + 1) % _gameLibs.size();
+    }
+    selected_game_index = index;
+    return "./lib/game_lib/" + _gameLibs[index];
+}
+
+std::string MenuGame::get_next_graphical(bool previous)
+{
+    int index = selected_graphical_index;
+    if (previous) {
+        index = (index - 1 + _graphicalLibs.size()) % _graphicalLibs.size();
+    } else {
+        index = (index + 1) % _graphicalLibs.size();
+    }
+    selected_graphical_index = index;
+    return "./lib/graphical_lib/" + _graphicalLibs[index];
+}
+
 void MenuGame::exit()
 {
     std::cout << "[" << _name << "] exit called" << std::endl;
 }
 
-
+/* don't need this as the menu game is not treated like a normal game
 extern "C" {
 
 IGameModule* create()
@@ -262,3 +301,4 @@ void destroy(IGameModule* instance)
 }
 
 }
+*/

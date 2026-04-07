@@ -23,6 +23,34 @@ static sf::Color toSfColor(Color color)
     }
 }
 
+bool SFML_lib::isInsideGameArea(int x, int y) const
+{
+    return x >= 0 && y >= 0
+        && x < static_cast<int>(_width)
+        && y < static_cast<int>(_height);
+}
+
+sf::Vector2f SFML_lib::tileToPixel(int x, int y) const
+{
+    return {
+        static_cast<float>(_originX + x * static_cast<int>(_tileSize)),
+        static_cast<float>(_originY + y * static_cast<int>(_tileSize))
+    };
+}
+
+void SFML_lib::updateLayout()
+{
+    const sf::Vector2u winSize = _window.getSize();
+    const int boxW = static_cast<int>(_width * _tileSize);
+    const int boxH = static_cast<int>(_height * _tileSize);
+
+    _originX = (static_cast<int>(winSize.x) - boxW) / 2;
+    _originY = (static_cast<int>(winSize.y) - boxH) / 2;
+
+    _frameBorder.setPosition(static_cast<float>(_originX), static_cast<float>(_originY));
+    _frameBorder.setSize(sf::Vector2f(static_cast<float>(boxW), static_cast<float>(boxH)));
+
+}
 
 SFML_lib::SFML_lib()
 {
@@ -44,12 +72,21 @@ void SFML_lib::init()
     if (!_font.loadFromFile("assets/Xolonium-Regular.ttf")) {
         std::cerr << "Failed to load font" << std::endl;
     }
+
+
+    _frameBorder.setFillColor(sf::Color::Transparent);
+    _frameBorder.setOutlineThickness(3.f);
+    _frameBorder.setOutlineColor(sf::Color(255, 255, 255, 180));
+
+    updateLayout(); //we only do it once at the start, because SFML automatically maintains the aspect ratio of the window
+    // so we don't need to update the layout on resize
 }
 
 void SFML_lib::draw()
 {
     if (!_window.isOpen())
         return;
+    _window.draw(_frameBorder);
     _window.display();
 }
 
@@ -82,6 +119,16 @@ EventType SFML_lib::pollEvents()
                     return QUIT;
                 case sf::Keyboard::M:
                     return MENU;
+                case sf::Keyboard::Enter:
+                    return ENTER;
+                case sf::Keyboard::Num1:
+                    return NUM_1;
+                case sf::Keyboard::Num2:
+                    return NUM_2;
+                case sf::Keyboard::Num3:
+                    return NUM_3;
+                case sf::Keyboard::Num4:
+                    return NUM_4;
                 default:
                     break;
             }
@@ -108,7 +155,7 @@ void SFML_lib::stop()
 
 void SFML_lib::clear()
 {
-     _window.clear(sf::Color::Black);
+    _window.clear(sf::Color::Black);
 }
 
 void SFML_lib::drawTile(ShapeType shape, Color color, int x, int y)
@@ -203,6 +250,27 @@ void SFML_lib::drawSprite(const Sprite &sprite, int x, int y)
         static_cast<float>(_originY + y * static_cast<int>(_tileSize))
     );
     _window.draw(sfSprite);
+}
+
+char SFML_lib::getInputChar()
+{
+    //we'll use sf::Event::TextEntered
+    sf::Event event;
+
+    while (_window.pollEvent(event)) {
+        if (event.type == sf::Event::TextEntered) {
+            if (event.text.unicode < 128 && event.text.unicode >= 32) {
+                return static_cast<char>(event.text.unicode);
+            }
+        }
+        if (event.type == sf::Event::KeyPressed) {
+            if (event.key.code == sf::Keyboard::Enter ||
+                event.key.code == sf::Keyboard::Escape) {
+                return '\n';
+            }
+        }
+    }
+    return '\0';
 }
 
 //C interface (THIS is what dlopen/dlsym uses)

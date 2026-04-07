@@ -30,7 +30,7 @@ class ADisplayModule : public IDisplayModule
 
         virtual char getInputChar() override
         {
-            return '\0'; //by default, we return null character, which means no input
+            return '\n'; //by default, we return enter character, which means we skip the naming
         }
 
         virtual void drawSprite(const Sprite &sprite, int x, int y) override
