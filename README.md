@@ -1,3 +1,25 @@
+# follow up things todo
+- SFML menu is ugly
+- SegFault (we don't know)
+
+Oriol tests are a problem (beg for mercy to Oriol) (he will test it like a baby playing in a computer)
+
+tetris looks good
+
+Button spamming definetly crashes the arcade.
+Oriol: not the prettiest UI.
+
+architecture is quite clean, looks good overall.
+
+graphical sl and ncurses map instead of switch cases.
+
+- there's a few things that could be cleaner, but overall looks good.
+
+Alrik forgot to send out ... (something about errors with the other group) (Oriol talked about exceptions)
+
+- Make our custom exception classes. (IMPORTANT!!!!!!) (it is a skill that we are yet to achieve) 
+
+
 # Arcade
 
 A modular arcade framework that lets you mix and match graphical backends and games at runtime through dynamic library loading. The core engine, graphical renderers, and games are completely decoupled — you can swap any component without recompiling anything else.
