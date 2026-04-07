@@ -40,6 +40,8 @@ void Core::go_next_lib(EventType event)
     }
     _lastEvent = OTHER; //we reset the last event to other so we don't immediately repeat the same event again
     _elapsed = game_module->get_elapsed(); //we update the elapsed time based on the new game's settings
+    //initialise the graphical
+    graphical_module->init();
 }
 
 void Core::run()
@@ -47,7 +49,7 @@ void Core::run()
     graphical_module = graphical_loader.getInstance();
     game_module = game_loader.getInstance();
 
-    printf("graphicalName: %s\n", graphical_module->getName().c_str()); //crashes here (this is line 38)
+    printf("graphicalName: %s\n", graphical_module->getName().c_str());
     printf("gameName: %s\n", game_module->getName().c_str());
 
     //mem leak comes from here.
