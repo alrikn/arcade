@@ -8,6 +8,7 @@
 #include "MenuGame.hpp"
 #include "IDisplayModule.hpp"
 #include<dirent.h>
+#include "Error.hpp"
 
 MenuGame::MenuGame(std::string default_game_path, std::string default_graphical_path)
 {
@@ -40,7 +41,8 @@ void MenuGame::loadLibs()
     //we loop through all files in lib/game_lib and put them in _gameLibs
     DIR *dir;
     struct dirent *ent;
-    if ((dir = opendir("./lib/game_lib")) != NULL) {
+    dir = opendir("./lib/game_lib");
+    if (dir != NULL) {
         while ((ent = readdir(dir)) != NULL) {
             std::string fileName = ent->d_name;
             if (fileName.size() > 3 && fileName.substr(fileName.size() - 3) == ".so") {
@@ -48,10 +50,13 @@ void MenuGame::loadLibs()
             }
         }
         closedir(dir);
-    }
+    } else
+        throw CoreError("Failed to open game_lib directory: ./lib/game_lib");
 
+    dir = nullptr;
     //we loop through all files in lib/graphical_lib and put them in _graphicalLibs
-    if ((dir = opendir("./lib/graphical_lib")) != NULL) {
+    dir = opendir("./lib/graphical_lib");
+    if (dir != NULL) {
         while ((ent = readdir(dir)) != NULL) {
             std::string fileName = ent->d_name;
             if (fileName.size() > 3 && fileName.substr(fileName.size() - 3) == ".so") {
@@ -59,7 +64,8 @@ void MenuGame::loadLibs()
             }
         }
         closedir(dir);
-    }
+    } else
+        throw CoreError("Failed to open graphical_lib directory: ./lib/graphical_lib");
 }
 
 void MenuGame::load_display(IDisplayModule* display)

@@ -118,26 +118,29 @@ void Core::load_new_game(std::string game_path)
     game_module->exit();
     game_loader.reset();
 
-    game_loader.setHandle(game_path);
-    game_module = game_loader.getInstance();
-    game_module->load_display(graphical_module);
-
+    try {
+        game_loader.setHandle(game_path);
+        game_module = game_loader.getInstance();
+        game_module->load_display(graphical_module);
+    } catch (const std::exception& e) {
+        throw CoreError("Failed to load game library: " + game_path + " - " + std::string(e.what()));
+    }
     _currentGameLib = game_path;
 }
 
 void Core::load_new_graphical(std::string graphical_path)
 {
-    std::cout << "old path: " << _currentGraphicalLib << std::endl;
-    std::cout << "new path: " << graphical_path << std::endl;
-
     graphical_module->stop();
     graphical_loader.reset();
 
-    graphical_loader.setHandle(graphical_path);
-    graphical_module = graphical_loader.getInstance();
-    game_module->load_display(graphical_module);
-    _menu_game.load_display(graphical_module); //we also need to reload the menu with the new graphical library, otherwise when we go back to the menu it will use the old graphical library which is now unloaded, and that will cause a crash when we try to draw with it.
-
+    try {
+        graphical_loader.setHandle(graphical_path);
+        graphical_module = graphical_loader.getInstance();
+        game_module->load_display(graphical_module);
+        _menu_game.load_display(graphical_module); //we also need to reload the menu with the new graphical library, otherwise when we go back to the menu it will use the old graphical library which is now unloaded, and that will cause a crash when we try to draw with it.
+    } catch (const std::exception& e) {
+        throw CoreError("Failed to load graphical library: "+ graphical_path + " - " + std::string(e.what()));
+    }
     _currentGraphicalLib = graphical_path;
     graphical_module->init();
 }
