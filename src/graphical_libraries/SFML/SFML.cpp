@@ -7,6 +7,7 @@
 
 #include "IDisplayModule.hpp"
 #include "SFML_lib.hpp"
+#include "Error.hpp"
 
 static sf::Color toSfColor(Color color)
 {
@@ -70,7 +71,7 @@ void SFML_lib::init()
     _window.setFramerateLimit(60);
 
     if (!_font.loadFromFile("assets/Xolonium-Regular.ttf")) {
-        std::cerr << "Failed to load font" << std::endl;
+        throw GraphicalError("Failed to load font: assets/Xolonium-Regular.ttf");
     }
 
 
