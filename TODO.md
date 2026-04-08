@@ -14,6 +14,11 @@
 - [x] add a "high scores" section in the menu that displays the high scores for each game.
 - [x] the menu should be able to switch games when 1 or 2 is being pressed.
 - [x] the menu should be able to switch graphical libraries when 3 or 4 is being pressed.
+- [ ] handle delete for the name.
+
+## Error classes
+- [ ] add a custom exception class for handling errors in the arcade project
+- [ ] add class for dlloader issue, game issue, graphical issue, and core issue.
 
 ## Games
 
@@ -22,18 +27,19 @@
 - [x] add a high score system to snake (stores the highest score achieved in the game and displays it in the menu)
 
 ### Nibbler
-- [ ] add a score system to nibbler
+- [x] add a score system to nibbler
 
-- [ ] whatever nico wants
+- [x] whatever nico wants
 
 ### tetris
-- [ ] add a score system to tetris
-- [ ] whatever jad wants
+- [x] add a score system to tetris
+- [x] whatever jad wants
 
 ## Graphical libraries
 
 ### Ncurses
 - [x] implement the ncurses graphical library (for the menu and the games)
+- [ ] make the code a bit nicer.
 
 ### SFML
 - [ ] ensuring it works in the same way sfml does, by which i mean that inside the sfml window, there should be a background sprite, and then on that background sprite, we have the center as a black window (the game window that the game has acceess to).

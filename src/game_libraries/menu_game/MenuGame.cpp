@@ -8,6 +8,7 @@
 #include "MenuGame.hpp"
 #include "IDisplayModule.hpp"
 #include<dirent.h>
+#include "Error.hpp"
 
 MenuGame::MenuGame(std::string default_game_path, std::string default_graphical_path)
 {
@@ -40,7 +41,8 @@ void MenuGame::loadLibs()
     //we loop through all files in lib/game_lib and put them in _gameLibs
     DIR *dir;
     struct dirent *ent;
-    if ((dir = opendir("./lib/game_lib")) != NULL) {
+    dir = opendir("./lib/game_lib");
+    if (dir != NULL) {
         while ((ent = readdir(dir)) != NULL) {
             std::string fileName = ent->d_name;
             if (fileName.size() > 3 && fileName.substr(fileName.size() - 3) == ".so") {
@@ -48,10 +50,13 @@ void MenuGame::loadLibs()
             }
         }
         closedir(dir);
-    }
+    } else
+        throw CoreError("Failed to open game_lib directory: ./lib/game_lib");
 
+    dir = nullptr;
     //we loop through all files in lib/graphical_lib and put them in _graphicalLibs
-    if ((dir = opendir("./lib/graphical_lib")) != NULL) {
+    dir = opendir("./lib/graphical_lib");
+    if (dir != NULL) {
         while ((ent = readdir(dir)) != NULL) {
             std::string fileName = ent->d_name;
             if (fileName.size() > 3 && fileName.substr(fileName.size() - 3) == ".so") {
@@ -59,7 +64,8 @@ void MenuGame::loadLibs()
             }
         }
         closedir(dir);
-    }
+    } else
+        throw CoreError("Failed to open graphical_lib directory: ./lib/graphical_lib");
 }
 
 void MenuGame::load_display(IDisplayModule* display)
@@ -166,7 +172,7 @@ void MenuGame::displayHighscores(int startX, int startY)
 
 
     // Title
-    _display->drawText(" Highscores: ", WHITE, startX + 2, startY + 1);
+    _display->drawText(" Highscores: ", CYAN, startX, startY + 1);
 
     if (highscore_json.empty()) {
         _display->drawText(" No scores yet", WHITE, startX + 2, startY + 3);
@@ -180,7 +186,7 @@ void MenuGame::displayHighscores(int startX, int startY)
     for (auto& [game_name, scores] : highscore_json.items()) {
         if (scores.contains(player_name)) {
             unsigned int score = scores[player_name];
-            _display->drawText(std::to_string(rank) + ". " + game_name + ": " + std::to_string(score), WHITE, startX + 2, y++);
+            _display->drawText(std::to_string(rank) + ". " + game_name + ": " + std::to_string(score), YELLOW, startX + 2, y++);
             rank++;
         }
 
@@ -188,7 +194,8 @@ void MenuGame::displayHighscores(int startX, int startY)
     }
 }
 
-
+//lets add a bit more color since it looks terrible,
+// if anybody doesn't like them feel free to change them
 void MenuGame::tick(EventType input)
 {
 
@@ -223,12 +230,12 @@ void MenuGame::tick(EventType input)
     int index = 0;
 
     _display->drawText("Welcome to the Arcade!", WHITE, 0, y++);
-    _display->drawText("Use W/S to navigate", WHITE, 0, y++);
-    _display->drawText("Press SPACE to select", WHITE, 0, y++);
-    _display->drawText("Press Q to quit", WHITE, 0, y++);
+    _display->drawText("Use W/S to navigate", GREEN, 0, y++);
+    _display->drawText("Press SPACE to select", BLUE, 0, y++);
+    _display->drawText("Press Q to quit", RED, 0, y++);
     y++; //for readability
 
-    _display->drawText("Available Game Libraries:", WHITE, 0, y++);
+    _display->drawText("Available Game Libraries:", MAGENTA, 0, y++);
     for (const auto& lib : _gameLibs) {
         std::string prefix = (global_index == index) ? "> " : "  ";
         _display->drawText(prefix + lib, WHITE, 2, y++);
@@ -237,7 +244,7 @@ void MenuGame::tick(EventType input)
 
     y++;
 
-    _display->drawText("Available Graphical Libraries:", WHITE, 0, y++);
+    _display->drawText("Available Graphical Libraries:", MAGENTA, 0, y++);
     for (const auto& lib : _graphicalLibs) {
         std::string prefix = (global_index == index) ? "> " : "  ";
         _display->drawText(prefix + lib, WHITE, 2, y++);

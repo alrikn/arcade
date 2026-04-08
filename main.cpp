@@ -9,6 +9,7 @@
 
 #include "Core.hpp"
 #include <cstdlib>
+#include <exception>
 
 bool file_exists(const std::string &filename)
 {
@@ -21,8 +22,7 @@ bool file_exists(const std::string &filename)
 std::string get_graphical_path(std::string graph_path_user)
 {
     if (!file_exists(graph_path_user)) {
-        std::cerr << "Graphical library not found: " << graph_path_user << std::endl;
-        exit(84);
+        throw CoreError("Graphical library not found: " + graph_path_user);
     }
     //now we check if the same file exists in the graphical lib folder, if it does, we use that one instead
 
@@ -34,8 +34,7 @@ std::string get_graphical_path(std::string graph_path_user)
     if (file_exists(lib_path)) {
         return lib_path;
     }
-    std::cerr << "graphical library is not recognised" << std::endl;
-    exit(84);
+    throw CoreError("Graphical library is not recognised: " + graph_path_user);
 }
 
 int main(int argc, char **argv)
@@ -45,10 +44,20 @@ int main(int argc, char **argv)
         std::cerr << "Available graphical libraries: ncurses, sfml, sdl2" << std::endl;
         return 84;
     }
-    std::string graph_lib = get_graphical_path(argv[1]);
-
+    std::string graph_lib;
+    try {
+        graph_lib = get_graphical_path(argv[1]);
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 84;
+    }
     Core core(graph_lib);
-    core.run();
+    try {
+        core.run();
+    } catch (const std::exception& e) {
+        std::cerr << "Error :" << e.what() << std::endl;
+        return 84;
+    }
 
     return 0;
 }

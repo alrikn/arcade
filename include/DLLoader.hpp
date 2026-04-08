@@ -10,6 +10,7 @@
 
 #include <dlfcn.h>
 #include <stdexcept>
+#include "Error.hpp"
 
 template <typename T>
 class DLLoader {
@@ -25,7 +26,7 @@ class DLLoader {
         {
             _handle = dlopen(path.c_str(), RTLD_LAZY);
             if (!_handle)
-                throw std::runtime_error(dlerror());
+                throw DLLoadError(dlerror());
         }
 
         ~DLLoader()
@@ -59,20 +60,20 @@ class DLLoader {
             reset();
             _handle = dlopen(path.c_str(), RTLD_LAZY);
             if (!_handle)
-                throw std::runtime_error(dlerror());
+                throw DLLoadError(dlerror());
         }
 
         T* getInstance()
         {
             void* sym = dlsym(_handle, "create");
             if (!sym)
-                throw std::runtime_error(dlerror());
+                throw DLLoadError(dlerror());
 
             T* (*create)() = reinterpret_cast<T* (*)()>(sym);
 
             sym = dlsym(_handle, "destroy");
             if (!sym)
-                throw std::runtime_error(dlerror());
+                throw DLLoadError(dlerror());
             _destroyFunc = reinterpret_cast<void (*)(T*)>(sym);
             _instance = create();
             return _instance;
