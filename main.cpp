@@ -48,7 +48,12 @@ int main(int argc, char **argv)
     std::string graph_lib = get_graphical_path(argv[1]);
 
     Core core(graph_lib);
-    core.run();
+    try {
+        core.run();
+    } catch (const std::exception& e) {
+        std::cerr << "Error :" << e.what() << std::endl;
+        return 84;
+    }
 
     return 0;
 }
