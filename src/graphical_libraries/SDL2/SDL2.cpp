@@ -280,6 +280,35 @@ void SDL2::drawTile(ShapeType shape, Color color, int x, int y)
 	}
 }
 
+// drawing text with SDL_ttf
+// https://thenumb.at/cpp-course/sdl2/07/07.html
+void SDL2::drawText(const std::string &text, Color color, int x, int y)
+{
+	if (!_renderer || !_font || text.empty())
+		return;
+
+	SDL_Surface *surface = TTF_RenderUTF8_Blended(_font, text.c_str(), toSdlTextColor(color));
+	if (!surface)
+		return;
+
+	SDL_Texture *texture = SDL_CreateTextureFromSurface(_renderer, surface);
+	if (!texture) {
+		SDL_FreeSurface(surface);
+		return;
+	}
+
+	SDL_Rect dst = {
+		_originX + x * static_cast<int>(_tileSize),
+		_originY + y * static_cast<int>(_tileSize),
+		surface->w,
+		surface->h
+	};
+
+	SDL_RenderCopy(_renderer, texture, nullptr, &dst);
+
+	SDL_DestroyTexture(texture);
+	SDL_FreeSurface(surface);
+}
 
 // c entry point used by the dynamic loader to create the sdl2 module no other choice anyway
 extern "C" {
