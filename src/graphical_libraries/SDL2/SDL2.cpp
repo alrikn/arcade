@@ -182,6 +182,23 @@ void SDL2::stop()
 		SDL_Quit();
 }
 
+// dissplays the prepared frame
+void SDL2::draw()
+{
+	if (_renderer)
+		SDL_RenderPresent(_renderer);
+}
+
+// clears the frame w/ dark blue bg
+void SDL2::clear()
+{
+	if (!_renderer)
+		return;
+	SDL_SetRenderDrawColor(_renderer, 8, 16, 28, 255);
+	SDL_RenderClear(_renderer);
+}
+
+
 // c entry point used by the dynamic loader to create the sdl2 module no other choice anyway
 extern "C" {
 
