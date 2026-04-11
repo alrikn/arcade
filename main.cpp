@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 {
     if (argc != 2) {
         std::cerr << "Usage: " << argv[0] << " <graphical_lib_name>" << std::endl;
-        std::cerr << "Available graphical libraries: ncurses, sfml, sdl2" << std::endl;
+        std::cerr << "Available graphical libraries: lib/arcade_ncurses.so, lib/arcade_sfml, lib/arcade_sdl2" << std::endl;
         return 84;
     }
     std::string graph_lib;
