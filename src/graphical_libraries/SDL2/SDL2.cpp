@@ -97,6 +97,61 @@ SDL_Texture *SDL2::loadTexture(const std::string &path)
 	return texture;
 }
 
+// init sdl2, SDL_image, SDL_ttf and window resources:
+// sources: https://thenumb.at/cpp-course/sdl2/01/01.html
+// and https://thenumb.at/cpp-course/sdl2/05/05.html
+void SDL2::init()
+{
+	if (_window && _renderer)
+		return;
+
+	if (SDL_Init(SDL_INIT_VIDEO) != 0)
+		throw GraphicalError("sdl init failed: " + std::string(SDL_GetError()));
+	const int imageFlags = IMG_INIT_PNG;
+	if ((IMG_Init(imageFlags) & imageFlags) == 0) {
+		SDL_Quit();
+		throw GraphicalError("SDL_image init failed: " + std::string(IMG_GetError()));
+	}
+	if (TTF_Init() == -1) {
+		IMG_Quit();
+		SDL_Quit();
+		throw GraphicalError("SDL_ttf init failed: " + std::string(TTF_GetError()));
+	}
+
+	const int winW = static_cast<int>(_width * _tileSize + 2 * _tileSize);
+	const int winH = static_cast<int>(_height * _tileSize + 2 * _tileSize);
+
+	_window = SDL_CreateWindow("Arcade - SDL2", SDL_WINDOWPOS_CENTERED,
+		SDL_WINDOWPOS_CENTERED, winW, winH, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+	if (!_window) {
+		TTF_Quit();
+		IMG_Quit();
+		SDL_Quit();
+		throw GraphicalError("sdl window creation failed: " + std::string(SDL_GetError()));
+	}
+
+	_renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	if (!_renderer) {
+		SDL_DestroyWindow(_window);
+		_window = nullptr;
+		TTF_Quit();
+		IMG_Quit();
+		SDL_Quit();
+		throw GraphicalError("sdl renderer creation failed: " + std::string(SDL_GetError()));
+	}
+
+	_font = TTF_OpenFont("/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf", 20);
+	if (!_font)
+		_font = TTF_OpenFont("assets/Xolonium-Regular.ttf", 18);
+	if (!_font) {
+		stop();
+		throw GraphicalError("failed to load dont for sdl renderer");
+	}
+
+	_originX = static_cast<int>(_tileSize);
+	_originY = static_cast<int>(_tileSize);
+}
+
 // c entry point used by the dynamic loader to create the sdl2 module no other choice anyway
 extern "C" {
 
