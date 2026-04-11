@@ -246,6 +246,40 @@ EventType SDL2::pollEvents()
 	return OTHER;
 }
 
+// drawing  tile shapes
+void SDL2::drawTile(ShapeType shape, Color color, int x, int y)
+{
+	if (!_renderer)
+		return;
+
+	SDL_Color sdlColor = toSdlColor(color);
+	SDL_SetRenderDrawColor(_renderer, sdlColor.r, sdlColor.g, sdlColor.b, sdlColor.a);
+
+	const int px = _originX + x * static_cast<int>(_tileSize);
+	const int py = _originY + y * static_cast<int>(_tileSize);
+	const int radius = static_cast<int>(_tileSize / 2);
+
+	if (shape == EMPTY)
+		return;
+
+	if (shape == SQUARE || shape == UNKNOWN) {
+		SDL_Rect rect = {px, py, static_cast<int>(_tileSize), static_cast<int>(_tileSize)};
+		SDL_RenderFillRect(_renderer, &rect);
+		return;
+	}
+
+	if (shape == CIRCLE) {
+		const int centerX = px + radius;
+		const int centerY = py + radius;
+		for (int dy = -radius; dy <= radius; ++dy) {
+			for (int dx = -radius; dx <= radius; ++dx) {
+				if (dx * dx + dy * dy <= radius * radius)
+					SDL_RenderDrawPoint(_renderer, centerX + dx, centerY + dy);
+			}
+		}
+	}
+}
+
 
 // c entry point used by the dynamic loader to create the sdl2 module no other choice anyway
 extern "C" {
