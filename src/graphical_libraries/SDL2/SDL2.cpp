@@ -152,6 +152,36 @@ void SDL2::init()
 	_originY = static_cast<int>(_tileSize);
 }
 
+// frees all sdl2 rsrc
+void SDL2::stop()
+{
+	for (auto &entry : _textures) {
+		if (entry.second)
+			SDL_DestroyTexture(entry.second);
+	}
+	_textures.clear();
+	_failedTextures.clear();
+
+	if (_font) {
+		TTF_CloseFont(_font);
+		_font = nullptr;
+	}
+	if (_renderer) {
+		SDL_DestroyRenderer(_renderer);
+		_renderer = nullptr;
+	}
+	if (_window) {
+		SDL_DestroyWindow(_window);
+		_window = nullptr;
+	}
+
+	if (TTF_WasInit())
+		TTF_Quit();
+	IMG_Quit();
+	if (SDL_WasInit(SDL_INIT_VIDEO))
+		SDL_Quit();
+}
+
 // c entry point used by the dynamic loader to create the sdl2 module no other choice anyway
 extern "C" {
 
