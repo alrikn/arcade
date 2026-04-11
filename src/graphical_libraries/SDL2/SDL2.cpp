@@ -96,3 +96,20 @@ SDL_Texture *SDL2::loadTexture(const std::string &path)
 	_textures[fullPath] = texture;
 	return texture;
 }
+
+// c entry point used by the dynamic loader to create the sdl2 module no other choice anyway
+extern "C" {
+
+IDisplayModule* create()
+{
+	return new SDL2();
+}
+
+// c entry point used by the dynamic loader to destroy the sdl2 module no other choice anyway
+void destroy(IDisplayModule* instance)
+{
+	instance->stop();
+	delete instance;
+}
+
+}
