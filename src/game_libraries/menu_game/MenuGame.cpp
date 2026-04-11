@@ -9,6 +9,22 @@
 #include "IDisplayModule.hpp"
 #include<dirent.h>
 #include "Error.hpp"
+#include <algorithm>
+
+static int centerTextX(int areaWidth, const std::string &text)
+{
+    int x = (areaWidth - static_cast<int>(text.size())) / 2;
+    return std::max(0, x);
+}
+
+static Sprite makeBackgroundSprite()
+{
+    Sprite background;
+    background.path = "jad_background.jpg";
+    background.fallback = EMPTY;
+    background.fallbackColor = BLACK;
+    return background;
+}
 
 MenuGame::MenuGame(std::string default_game_path, std::string default_graphical_path)
 {
@@ -165,14 +181,9 @@ void MenuGame::drawBox(int startX, int startY, int width, int height)
 
 void MenuGame::displayHighscores(int startX, int startY)
 {
-    //int boxWidth = 40;
-    //int boxHeight = 10;
+    drawBox(startX, startY, 42, 9);
 
-    //drawBox(startX, startY, boxWidth, boxHeight);
-
-
-    // Title
-    _display->drawText(" Highscores: ", CYAN, startX, startY + 1);
+    _display->drawText(" Highscores ", CYAN, startX + 13, startY + 1);
 
     if (highscore_json.empty()) {
         _display->drawText(" No scores yet", WHITE, startX + 2, startY + 3);
@@ -225,33 +236,47 @@ void MenuGame::tick(EventType input)
 
     //render handler
     _display->clear();
+    _display->drawSprite(makeBackgroundSprite(), 0, 0);
 
-    int y = 0;
+    const int mainBoxWidth = 54;
+    const int mainBoxHeight = 21;
+    const int mainBoxX = (_width - mainBoxWidth) / 2;
+    const int mainBoxY = 1;
+    const int highscoreBoxWidth = 42;
+    const int highscoreBoxX = (_width - highscoreBoxWidth) / 2;
+    const int highscoreBoxY = mainBoxY + mainBoxHeight + 1;
+    int y = mainBoxY + 1;
     int index = 0;
+    const std::string title = "ARCADE";
+    const std::string authors = "Authors: Alrik Neihouser, Jad Bghiel and Nico Aguado";
 
-    _display->drawText("Welcome to the Arcade!", WHITE, 0, y++);
-    _display->drawText("Use W/S to navigate", GREEN, 0, y++);
-    _display->drawText("Press SPACE to select", BLUE, 0, y++);
-    _display->drawText("Press Q to quit", RED, 0, y++);
-    y++; //for readability
+    drawBox(mainBoxX, mainBoxY, mainBoxWidth, mainBoxHeight);
 
-    _display->drawText("Available Game Libraries:", MAGENTA, 0, y++);
+    _display->drawText(title, YELLOW, centerTextX(_width, title), 0);
+    _display->drawText(" Welcome to the Arcade ", WHITE, centerTextX(mainBoxWidth, " Welcome to the Arcade ") + mainBoxX, y++);
+    _display->drawText(" Use W/S to navigate ", GREEN, centerTextX(mainBoxWidth, " Use W/S to navigate ") + mainBoxX, y++);
+    _display->drawText(" Press SPACE to select ", BLUE, centerTextX(mainBoxWidth, " Press SPACE to select ") + mainBoxX, y++);
+    _display->drawText(" Press Q to quit ", RED, centerTextX(mainBoxWidth, " Press Q to quit ") + mainBoxX, y++);
+    y++; //spacing inside the box
+
+    _display->drawText(" Game Libraries ", MAGENTA, centerTextX(mainBoxWidth, " Game Libraries ") + mainBoxX, y++);
     for (const auto& lib : _gameLibs) {
         std::string prefix = (global_index == index) ? "> " : "  ";
-        _display->drawText(prefix + lib, WHITE, 2, y++);
+        _display->drawText(prefix + lib, (global_index == index) ? YELLOW : WHITE, mainBoxX + 4, y++);
         index++;
     }
 
-    y++;
+    y++; // spacing between the two lists
 
-    _display->drawText("Available Graphical Libraries:", MAGENTA, 0, y++);
+    _display->drawText(" Graphical Libraries ", MAGENTA, centerTextX(mainBoxWidth, " Graphical Libraries ") + mainBoxX, y++);
     for (const auto& lib : _graphicalLibs) {
         std::string prefix = (global_index == index) ? "> " : "  ";
-        _display->drawText(prefix + lib, WHITE, 2, y++);
+        _display->drawText(prefix + lib, (global_index == index) ? YELLOW : WHITE, mainBoxX + 4, y++);
         index++;
     }
 
-    displayHighscores(0, y + 1);
+    displayHighscores(highscoreBoxX, highscoreBoxY);
+    _display->drawText(authors, CYAN, centerTextX(_width, authors), _height - 2);
 }
 
 std::tuple<std::string, std::string> MenuGame::get_path_chosen()
