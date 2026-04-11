@@ -15,6 +15,12 @@ static bool isPrintableAscii(SDL_Keycode key)
 	return key >= 32 && key <= 126;
 }
 
+// checks whether the sprite is the full screen menu bg
+static bool isBackgroundSprite(const std::string &path)
+{
+	return path == "jad_background.jpg";
+}
+
 // CHANGING COLORS HERE in sdl2 bc otherwise its undistingshable from sfml
 static SDL_Color toSdlTextColor(Color color)
 {
@@ -315,6 +321,20 @@ void SDL2::drawSprite(const Sprite &sprite, int x, int y)
 {
 	if (!_renderer)
 		return;
+
+	if (isBackgroundSprite(sprite.path)) {
+		SDL_Texture *texture = loadTexture(sprite.path);
+		if (!texture)
+			return;
+
+		int winW = 0;
+		int winH = 0;
+		SDL_GetRendererOutputSize(_renderer, &winW, &winH);
+
+		SDL_Rect dst = {0, 0, winW, winH};
+		SDL_RenderCopy(_renderer, texture, nullptr, &dst);
+		return;
+	}
 
 	SDL_Texture *texture = loadTexture(sprite.path);
 	if (!texture) {
