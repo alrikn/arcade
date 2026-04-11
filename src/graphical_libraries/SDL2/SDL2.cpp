@@ -65,3 +65,34 @@ SDL_Color SDL2::toSdlColor(Color color)
 		return it->second;
 	return {0, 0, 0, 255};
 }
+
+// loads and caches textures from assets/
+SDL_Texture *SDL2::loadTexture(const std::string &path)
+{
+	if (!_renderer)
+		return nullptr;
+
+	const std::string fullPath = "assets/" + path;
+
+	auto it = _textures.find(fullPath);
+	if (it != _textures.end())
+		return it->second;
+
+	if (_failedTextures.count(fullPath))
+		return nullptr;
+
+	SDL_Surface *surface = IMG_Load(fullPath.c_str());
+	if (!surface) {
+		_failedTextures.insert(fullPath);
+		return nullptr;
+	}
+
+	SDL_Texture *texture = SDL_CreateTextureFromSurface(_renderer, surface);
+	SDL_FreeSurface(surface);
+	if (!texture) {
+		_failedTextures.insert(fullPath);
+		return nullptr;
+	}
+	_textures[fullPath] = texture;
+	return texture;
+}
