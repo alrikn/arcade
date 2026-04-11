@@ -5,22 +5,20 @@
 ## Makefile
 ##
 
-
-
-NAME = arcade_SDL2.so
+NAME = arcade_sdl2.so
 
 SRC = SDL2.cpp
 
 CXX = clang++
 CXXFLAGS = -Wall -Wextra -g -fPIC -I../../../include
-LDFLAGS = -shared -lSDL2
+LDFLAGS = -shared -lSDL2 -lSDL2_ttf -lSDL2_image
 
 OUTPUT_DIR = ../../../lib/graphical_lib
 
 all: $(OUTPUT_DIR)/$(NAME)
 
 $(OUTPUT_DIR)/$(NAME): $(SRC) | $(OUTPUT_DIR)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
 $(OUTPUT_DIR):
 	mkdir -p $(OUTPUT_DIR)
