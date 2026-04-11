@@ -213,6 +213,39 @@ void SFML_lib::drawSprite(const Sprite &sprite, int x, int y)
         return;
     }
 
+    if (sprite.path == "jad_background.jpg") {
+        const std::string fullBackgroundPath = "assets/" + sprite.path;
+
+        if (_failedTextures.count(fullBackgroundPath)) {
+            return;
+        }
+
+        if (_textures.find(fullBackgroundPath) == _textures.end()) {
+            sf::Texture &stored = _textures[fullBackgroundPath];
+            if (!stored.loadFromFile(fullBackgroundPath)) {
+                _textures.erase(fullBackgroundPath);
+                _failedTextures.insert(fullBackgroundPath);
+                return;
+            }
+        }
+
+        const sf::Texture &backgroundTexture = _textures.at(fullBackgroundPath);
+        sf::Sprite backgroundSprite(backgroundTexture);
+        const sf::Vector2u windowSize = _window.getSize();
+        const sf::Vector2u textureSize = backgroundTexture.getSize();
+
+        if (textureSize.x > 0 && textureSize.y > 0) {
+            backgroundSprite.setScale(
+                static_cast<float>(windowSize.x) / static_cast<float>(textureSize.x),
+                static_cast<float>(windowSize.y) / static_cast<float>(textureSize.y)
+            );
+        }
+
+        backgroundSprite.setPosition(0.f, 0.f);
+        _window.draw(backgroundSprite);
+        return;
+    }
+
     const std::string fullPath = "assets/" + sprite.path;
 
     if (_failedTextures.count(fullPath)) {
