@@ -310,6 +310,59 @@ void SDL2::drawText(const std::string &text, Color color, int x, int y)
 	SDL_FreeSurface(surface);
 }
 
+// drawing sprites w/ fb to simple tiles when texture loading fails just incase it fucks up
+void SDL2::drawSprite(const Sprite &sprite, int x, int y)
+{
+	if (!_renderer)
+		return;
+
+	SDL_Texture *texture = loadTexture(sprite.path);
+	if (!texture) {
+		drawTile(sprite.fallback, sprite.fallbackColor, x, y);
+		return;
+	}
+
+	int texW = 0;
+	int texH = 0;
+	SDL_QueryTexture(texture, nullptr, nullptr, &texW, &texH);
+
+	SDL_Rect src = {0, 0, texW, texH};
+	if (sprite.srcW > 0 && sprite.srcH > 0) {
+		src.x = sprite.srcX;
+		src.y = sprite.srcY;
+		src.w = sprite.srcW;
+		src.h = sprite.srcH;
+	}
+
+	SDL_Rect dst = {
+		_originX + x * static_cast<int>(_tileSize),
+		_originY + y * static_cast<int>(_tileSize),
+		static_cast<int>(_tileSize),
+		static_cast<int>(_tileSize)
+	};
+
+	SDL_RenderCopy(_renderer, texture, &src, &dst);
+}
+
+// reads 1 char for menu name input
+char SDL2::getInputChar()
+{
+	SDL_Event event;
+
+	while (SDL_PollEvent(&event)) {
+		if (event.type == SDL_QUIT)
+			return '\n';
+		if (event.type == SDL_KEYDOWN) {
+			SDL_Keycode key = event.key.keysym.sym;
+			if (key == SDLK_RETURN || key == SDLK_KP_ENTER || key == SDLK_ESCAPE)
+				return '\n';
+			if (isPrintableAscii(key))
+				return static_cast<char>(key);
+		}
+	}
+	return '\0';
+}
+
 // c entry point used by the dynamic loader to create the sdl2 module no other choice anyway
 extern "C" {
 
