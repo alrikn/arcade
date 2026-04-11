@@ -198,6 +198,54 @@ void SDL2::clear()
 	SDL_RenderClear(_renderer);
 }
 
+// mappping sdl events to the shared project EventType enum
+// here: https://thenumb.at/cpp-course/sdl2/03/03.html
+EventType SDL2::pollEvents()
+{
+	SDL_Event event;
+	static const std::map<SDL_Keycode, EventType> keyToEvent = {
+		{SDLK_w, W_KEY},
+		{SDLK_UP, W_KEY},
+		{SDLK_a, A_KEY},
+		{SDLK_LEFT, A_KEY},
+		{SDLK_s, S_KEY},
+		{SDLK_DOWN, S_KEY},
+		{SDLK_d, D_KEY},
+		{SDLK_RIGHT, D_KEY},
+		{SDLK_SPACE, SPACE_KEY},
+		{SDLK_ESCAPE, QUIT},
+		{SDLK_q, QUIT},
+		{SDLK_m, MENU},
+		{SDLK_RETURN, ENTER},
+		{SDLK_KP_ENTER, ENTER},
+		{SDLK_1, NUM_1},
+		{SDLK_KP_1, NUM_1},
+		{SDLK_2, NUM_2},
+		{SDLK_KP_2, NUM_2},
+		{SDLK_3, NUM_3},
+		{SDLK_KP_3, NUM_3},
+		{SDLK_4, NUM_4},
+		{SDLK_KP_4, NUM_4},
+	};
+
+	while (SDL_PollEvent(&event)) {
+		if (event.type == SDL_QUIT)
+			return QUIT;
+		if (event.type == SDL_MOUSEBUTTONDOWN) {
+			if (event.button.button == SDL_BUTTON_LEFT)
+				return MOUSE_L;
+			if (event.button.button == SDL_BUTTON_RIGHT)
+				return MOUSE_R;
+		}
+		if (event.type == SDL_KEYDOWN) {
+			auto it = keyToEvent.find(event.key.keysym.sym);
+			if (it != keyToEvent.end())
+				return it->second;
+		}
+	}
+	return OTHER;
+}
+
 
 // c entry point used by the dynamic loader to create the sdl2 module no other choice anyway
 extern "C" {
