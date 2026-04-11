@@ -55,6 +55,19 @@ A modular arcade framework that lets you mix and match graphical backends and ga
   - Ubuntu/Debian: `sudo apt install libncurses-dev`
   - Arch: `sudo pacman -S ncurses`
   - macOS (Homebrew): `brew install ncurses`
+- **SDL2** development headers: needed to build and run the SDL2 graphical library:
+  - Ubuntu/Debian:
+    - `sudo apt install libsdl2-dev`
+    - `sudo apt install libsdl2-ttf-dev`
+    - `sudo apt install libsdl2-image-dev`
+  - Arch: `sudo pacman -S sdl2 sdl2_ttf sdl2_image`
+  - Fedora: `sudo dnf install SDL2-devel SDL2_ttf-devel SDL2_image-devel`
+
+If you only want to test SDL2 quickly on Ubuntu/Debian, this one-liner installs everything needed:
+
+```bash
+sudo apt install libncurses-dev libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev
+```
 
 ---
 
